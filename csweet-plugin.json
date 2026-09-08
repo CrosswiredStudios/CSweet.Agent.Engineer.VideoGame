@@ -8,7 +8,7 @@
     "specializationKeys": ["video-game-development", "gameplay-programming", "gameplay-systems", "engine-integration", "automated-testing", "build-diagnostics"]
   },
   "id": "com.csweet.video-game-engineer",
-  "name": "Video Game Engineer",
+  "name": "Adrian Silva",
   "version": "2.1.1",
   "publisher": { "id": "com.csweet", "name": "C-Sweet" },
   "runtime": {
@@ -83,6 +83,9 @@
   "webAccess": { "mode": "None", "rules": [] },
   "ui": [],
   "catalog": {
+    "imageUrl": "https://raw.githubusercontent.com/CrosswiredStudios/CSweet.Agent.Engineer.VideoGame/main/assets/branding/portrait-v1.jpg",
+    "companyLogoUrl": "https://raw.githubusercontent.com/CrosswiredStudios/CSweet.Agent.Engineer.VideoGame/main/assets/branding/csweet-icon.svg",
+    "accentColor": "#326A8E",
     "summary": "Implements tested gameplay and runtime code, integrations, source-control delivery, and build fixes.",
     "category": "Engineering",
     "role": { "key": "game-engineer", "name": "Video Game Engineer" },
