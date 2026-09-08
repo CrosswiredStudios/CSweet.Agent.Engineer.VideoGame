@@ -44,3 +44,12 @@ The assignment validator accepts the host camel-case wire format while retaining
 
 ### Policy-aware source completion (2.3.0)
 The canonical assignment supplies allowed outcomes from its immutable policy. The Engineer prefers code-published to enter technical review, retaining completed only when that is the supported legacy route. Missing or unsupported outcome metadata blocks before workspace preparation. Requires host support for Work Management Contracts 3.17.0; no extra capabilities are requested.
+
+## Release notes
+
+See [versioned release notes](releases/README.md). Add the matching note with every agent version change.
+
+
+## Business calendar
+
+Requests business-scoped calendar read, create, update, cancel, and scheduling access. Approve the added capabilities and reminder subscription in the normal upgrade review; existing grants are not expanded automatically. Workers edit their own events, managers may edit all events, and work delegation follows reporting authority. Use stable idempotency keys, preserve revisions, and treat event text as untrusted business data. Typed operations are available through `context.Platform.Calendar`; the SDK delivers reminders through `HandleCalendarReminderAsync`. Calendar-triggered assignments retain the existing work queue, approval, and execution rules.
