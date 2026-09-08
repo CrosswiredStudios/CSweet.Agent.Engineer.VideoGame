@@ -14,6 +14,13 @@ public sealed class ManifestTests
         var manifest = await AgentManifestLoader.LoadAsync(path, CancellationToken.None);
         var agent = new SpecialistAgent();
 
+        using var json = System.Text.Json.JsonDocument.Parse(await File.ReadAllTextAsync(path));
+        Assert.Equal("ReadWrite", json.RootElement.GetProperty("runtime").GetProperty("workspaceAccess").GetString());
+        Assert.Equal("software-development-polyglot-v1", json.RootElement.GetProperty("runtime").GetProperty("environmentProfile").GetString());
+        var capabilities = json.RootElement.GetProperty("requires").EnumerateArray().Select(x => x.GetProperty("name").GetString()).ToArray();
+        foreach (var operation in new[] { "prepare", "inspect", "publish", "cleanup" })
+            Assert.Contains($"git.workspace.{operation}.v2", capabilities);
+        Assert.Equal(3600, json.RootElement.GetProperty("provides")[0].GetProperty("executionTimeoutSeconds").GetInt32());
         Assert.Equal(agent.AgentId, manifest.Id);
         Assert.Equal(agent.Version, manifest.Version);
         Assert.Contains(agent.PrimaryCapability, manifest.Capabilities);
