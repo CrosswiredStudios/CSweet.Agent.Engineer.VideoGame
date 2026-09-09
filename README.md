@@ -27,7 +27,7 @@ Keep `csweet-plugin.json` at the repository root. Import a reviewed GitHub commi
 clone this repository as an immediate child of C-Sweet's configured local agent catalog. Review
 the exact manifest, grants, activation mode, and source before approving installation.
 
-Built with `CSweet.Agent.SDK` 3.27.0 and the bundled video-game extension source.
+Built with `CSweet.Agent.SDK` 3.40.0 and the bundled video-game extension source.
 
 
 ## Extension ownership and isolated builds
@@ -36,7 +36,7 @@ Game-specific payload helpers and decision logic live in the bundled `extensions
 
 ## Brokered code delivery (2.3.0)
 
-Game engineering execution now uses the platform-provided ticket workspace and coding harness to edit files and run validation. The ticket must already have an authoritative development brief and repository binding. Execution requests the software-development-polyglot-v1 environment, read/write workspace access, and work-item-scoped Git prepare, inspect, publish and cleanup capabilities. The one-hour execution budget replaces the documentation-only timeout. The SDK pin is 3.31.1; no shared SDK changes are required.
+Game engineering execution now uses the platform-provided ticket workspace and coding harness to edit files and run validation. The ticket must already have an authoritative development brief and repository binding. Execution requests the software-development-polyglot-v1 environment, read/write workspace access, and work-item-scoped Git prepare, inspect, publish and cleanup capabilities. The one-hour execution budget replaces the documentation-only timeout. The SDK pin is 3.40.0; no shared SDK changes are required.
 
 Successful execution requires changed files, successful validation results, actual reviewable workspace changes, and platform publication evidence. Pull-request delivery requires a returned PR URL. The published outcome is persisted per stage, attempt and assignment revision for duplicate-delivery recovery. Missing configuration or failed execution returns Blocked rather than completing with a Markdown artifact. Coding remains limited to game-engineer assignments and platform-granted repositories; no merge authority is requested. Lead review, independent QA and local preview are separate downstream requirements and are not proven by the implementation stage alone.
 
@@ -53,3 +53,5 @@ See [versioned release notes](releases/README.md). Add the matching note with ev
 ## Business calendar
 
 Requests business-scoped calendar read, create, update, cancel, and scheduling access. Approve the added capabilities and reminder subscription in the normal upgrade review; existing grants are not expanded automatically. Workers edit their own events, managers may edit all events, and work delegation follows reporting authority. Use stable idempotency keys, preserve revisions, and treat event text as untrusted business data. Typed operations are available through `context.Platform.Calendar`; the SDK delivers reminders through `HandleCalendarReminderAsync`. Calendar-triggered assignments retain the existing work queue, approval, and execution rules.
+
+Calendar-triggered assignments request the SDK claim/complete/block/release lifecycle and personal-work subscription. Unsupported role work is marked blocked with a reason, never silently treated as completed.
