@@ -18,6 +18,8 @@ public sealed partial class SpecialistAgent
     protected override async Task<AgentWorkResult> ExecuteCapabilityCoreAsync(
         AgentCapabilityRequest request, AgentRuntimeContext context, CancellationToken token)
     {
+        if (request.Capability == CSweet.Plugins.WebPreviews.WebPreviewAgentOperations.Capability)
+            return await CSweet.Plugins.WebPreviews.WebPreviewAgentOperations.ExecuteAsync(request, context, token);
         if (request.Capability != WorkManagementCapabilityNames.ExecutionRunV1)
             return await base.ExecuteCapabilityCoreAsync(request, context, token);
         WorkExecutionAssignmentV1? assignment;

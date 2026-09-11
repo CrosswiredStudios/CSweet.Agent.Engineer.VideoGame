@@ -23,6 +23,7 @@ public sealed class ManifestTests
         Assert.Equal(3600, json.RootElement.GetProperty("provides")[0].GetProperty("executionTimeoutSeconds").GetInt32());
         Assert.Equal(agent.AgentId, manifest.Id);
         Assert.Equal(agent.Version, manifest.Version);
+        Assert.Contains("web-preview.manage.v1", manifest.Capabilities);
         Assert.Contains(agent.PrimaryCapability, manifest.Capabilities);
         Assert.Empty(VideoGameSpecialistConformance.ValidateManifest(
             path, agent.AgentId, agent.DeclaredRoleKey, agent.PrimaryCapability));

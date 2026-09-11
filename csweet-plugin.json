@@ -18,7 +18,7 @@
   },
   "id": "com.csweet.video-game-engineer",
   "name": "Adrian Silva",
-  "version": "2.4.0",
+  "version": "2.6.0",
   "publisher": {
     "id": "com.csweet",
     "name": "C-Sweet"
@@ -113,14 +113,94 @@
       "executionTimeoutSeconds": 30,
       "idempotency": "work-item",
       "riskClass": "standard"
+    },
+    {
+      "name": "web-preview.manage.v1",
+      "executionTimeoutSeconds": 120,
+      "idempotency": "work-item",
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "description": "Manage a private product build/preview, request its owner grant, run browser checks and read diagnostics through typed platform callbacks. This is separate from implementation work.",
+      "riskClass": "elevated",
+      "inputSchema": {
+        "properties": {
+          "request": {
+            "type": "object"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "grant",
+              "preflight",
+              "build",
+              "build-status",
+              "start",
+              "read",
+              "stop",
+              "renew",
+              "test",
+              "diagnostics",
+              "list"
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "action",
+          "request"
+        ],
+        "additionalProperties": false
+      }
     }
   ],
   "requires": [
-    {"name":"work.personal-todo.claim.v1","scope":"organization","purpose":"SDK lifecycle for calendar-triggered personal assignments; existing execution restrictions remain."},{"name":"work.personal-todo.complete.v1","scope":"organization","purpose":"SDK lifecycle for calendar-triggered personal assignments; existing execution restrictions remain."},{"name":"work.personal-todo.block.v1","scope":"organization","purpose":"SDK lifecycle for calendar-triggered personal assignments; existing execution restrictions remain."},{"name":"work.personal-todo.release.v1","scope":"organization","purpose":"SDK lifecycle for calendar-triggered personal assignments; existing execution restrictions remain."},{"name": "work.calendar.read.v1", "scope": "organization", "purpose": "Operate the business calendar within event ownership and reporting authority."},
-    {"name": "work.calendar.create.v1", "scope": "organization", "purpose": "Operate the business calendar within event ownership and reporting authority."},
-    {"name": "work.calendar.update.v1", "scope": "organization", "purpose": "Operate the business calendar within event ownership and reporting authority."},
-    {"name": "work.calendar.cancel.v1", "scope": "organization", "purpose": "Operate the business calendar within event ownership and reporting authority."},
-    {"name": "work.calendar.schedule.v1", "scope": "organization", "purpose": "Operate the business calendar within event ownership and reporting authority."},
+    {
+      "name": "work.personal-todo.claim.v1",
+      "scope": "organization",
+      "purpose": "SDK lifecycle for calendar-triggered personal assignments; existing execution restrictions remain."
+    },
+    {
+      "name": "work.personal-todo.complete.v1",
+      "scope": "organization",
+      "purpose": "SDK lifecycle for calendar-triggered personal assignments; existing execution restrictions remain."
+    },
+    {
+      "name": "work.personal-todo.block.v1",
+      "scope": "organization",
+      "purpose": "SDK lifecycle for calendar-triggered personal assignments; existing execution restrictions remain."
+    },
+    {
+      "name": "work.personal-todo.release.v1",
+      "scope": "organization",
+      "purpose": "SDK lifecycle for calendar-triggered personal assignments; existing execution restrictions remain."
+    },
+    {
+      "name": "work.calendar.read.v1",
+      "scope": "organization",
+      "purpose": "Operate the business calendar within event ownership and reporting authority."
+    },
+    {
+      "name": "work.calendar.create.v1",
+      "scope": "organization",
+      "purpose": "Operate the business calendar within event ownership and reporting authority."
+    },
+    {
+      "name": "work.calendar.update.v1",
+      "scope": "organization",
+      "purpose": "Operate the business calendar within event ownership and reporting authority."
+    },
+    {
+      "name": "work.calendar.cancel.v1",
+      "scope": "organization",
+      "purpose": "Operate the business calendar within event ownership and reporting authority."
+    },
+    {
+      "name": "work.calendar.schedule.v1",
+      "scope": "organization",
+      "purpose": "Operate the business calendar within event ownership and reporting authority."
+    },
     {
       "name": "platform.llm.chat-stream.v1",
       "scope": "organization",
@@ -190,11 +270,62 @@
       "name": "git.workspace.cleanup.v2",
       "scope": "work-item",
       "purpose": "Execute and publish the exact assigned game implementation in its brokered workspace."
+    },
+    {
+      "reason": "Optional private product build, demo and testing under owner-approved scoped grants.",
+      "name": "web-preview.grant.request.v1"
+    },
+    {
+      "reason": "Optional private product build, demo and testing under owner-approved scoped grants.",
+      "name": "web-preview.preflight.v1"
+    },
+    {
+      "reason": "Optional private product build, demo and testing under owner-approved scoped grants.",
+      "name": "web-preview.build.v1"
+    },
+    {
+      "reason": "Optional private product build, demo and testing under owner-approved scoped grants.",
+      "name": "web-preview.start.v1"
+    },
+    {
+      "reason": "Optional private product build, demo and testing under owner-approved scoped grants.",
+      "name": "web-preview.read.v1"
+    },
+    {
+      "reason": "Optional private product build, demo and testing under owner-approved scoped grants.",
+      "name": "web-preview.stop.v1"
+    },
+    {
+      "reason": "Optional private product build, demo and testing under owner-approved scoped grants.",
+      "name": "web-preview.renew.v1"
+    },
+    {
+      "reason": "Optional private product build, demo and testing under owner-approved scoped grants.",
+      "name": "web-preview.test.v1"
+    },
+    {
+      "reason": "Optional private product build, demo and testing under owner-approved scoped grants.",
+      "name": "web-preview.diagnostics.read.v1"
+    },
+    {
+      "reason": "Optional private product build, demo and testing under owner-approved scoped grants.",
+      "name": "platform.build.request.v2"
+    },
+    {
+      "reason": "Optional private product build, demo and testing under owner-approved scoped grants.",
+      "name": "platform.build.read.v2"
+    },
+    {
+      "name": "web-preview.list.v1",
+      "reason": "Recover current private preview state after waking or missing lifecycle events."
     }
   ],
   "events": {
-    "subscribes": ["com.csweet.calendar.reminder-due.v1", "com.csweet.work.personal-todo.available.v1", 
-      "com.csweet.agent.coordination.turn-requested.v1"
+    "subscribes": [
+      "com.csweet.calendar.reminder-due.v1",
+      "com.csweet.work.personal-todo.available.v1",
+      "com.csweet.agent.coordination.turn-requested.v1",
+      "com.csweet.web-preview.changed.v1"
     ]
   },
   "configuration": [
