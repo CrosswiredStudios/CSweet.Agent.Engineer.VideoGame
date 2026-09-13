@@ -5,11 +5,7 @@ namespace CSweet.Agent.Engineer.VideoGame;
 public sealed partial class SpecialistAgent : VideoGameSpecialistAgentBase
 {
     public override string AgentId => "com.csweet.video-game-engineer";
-    public override string Version => "2.6.0";
-    public override Task HandleEventAsync(CSweet.Agent.SDK.AgentEventEnvelope message, CSweet.Agent.SDK.AgentRuntimeContext context, CancellationToken token) =>
-        message.EventType == CSweet.WebHost.Contracts.WebPreviewEvents.Changed
-            ? CSweet.Plugins.WebPreviews.WebPreviewAgentEvents.HandleAsync(message, context, token)
-            : base.HandleEventAsync(message, context, token);
+    public override string Version => "3.0.0";
     protected override string RoleKey => "game-engineer";
     protected override string ArtifactTypeKey => "video-game.engineering-delivery.v1";
     protected override string RolePrompt => "Own tested gameplay and runtime implementation, integrations, source-control delivery, and build fixes. Specify exact code changes, tests, source revision, and remaining technical risks.";

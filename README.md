@@ -5,7 +5,7 @@ Implements tested gameplay and runtime code, integrations, source-control delive
 ## Contract
 
 - Package ID: `com.csweet.video-game-engineer`
-- Version: `2.6.0`
+- Version: `3.0.0`
 - Provides: `work.execution.run.v1`
 - Activation: manual
 - Requested platform/provider capabilities: none
@@ -56,8 +56,6 @@ Requests business-scoped calendar read, create, update, cancel, and scheduling a
 
 Calendar-triggered assignments request the SDK claim/complete/block/release lifecycle and personal-work subscription. Unsupported role work is marked blocked with a reason, never silently treated as completed.
 
-## Private preview work
+## Infrastructure
 
-The web-preview.manage.v1 callback accepts an action and typed request object. Actions are grant, preflight, build, build-status, start, read, stop, renew, test and diagnostics. This separate capability keeps product hosting out of the implementation shell. Installation upgrade review, ordinary build permission, the optional plugin and an owner-approved project hosting grant are required. Use stable keys for mutations; repeat a test request to read its result. Renewal requests specify total lifetime since initial creation. Clone CSweet.Plugins.WebPreviews beside this repository for local development; no NuGet publication is required.
-
-The agent subscribes to com.csweet.web-preview.changed.v1 and refreshes authorized current state before reporting progress. Delayed or duplicate wakes never supply an old access link or authorize execution. The list action uses web-preview.list.v1 to recover all owned previews in an assigned project after missed events; read each recovered preview for current lifecycle and test runs. Upgrade review must approve the new subscription and list capability.
+The WebHost proof of concept and private-preview callbacks have been retired. Game implementation, source-control delivery and build authority remain separately scoped.
