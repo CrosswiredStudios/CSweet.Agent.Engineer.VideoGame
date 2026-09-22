@@ -14,6 +14,12 @@ public sealed class ManifestTests
         var manifest = await AgentManifestLoader.LoadAsync(path, CancellationToken.None);
         var agent = new SpecialistAgent();
 
+        using var tokenManifest = System.Text.Json.JsonDocument.Parse(await File.ReadAllTextAsync(path));
+        var tokenFields = tokenManifest.RootElement.GetProperty("configuration").EnumerateArray()
+            .Where(field => field.GetProperty("key").GetString() is
+                "maxContextWindowTokens" or "maxOutputTokens");
+        Assert.All(tokenFields, field => Assert.False(field.TryGetProperty("maximum", out _)));
+
         using var json = System.Text.Json.JsonDocument.Parse(await File.ReadAllTextAsync(path));
         Assert.Equal("ReadWrite", json.RootElement.GetProperty("runtime").GetProperty("workspaceAccess").GetString());
         Assert.Equal("software-development-polyglot-v1", json.RootElement.GetProperty("runtime").GetProperty("environmentProfile").GetString());
