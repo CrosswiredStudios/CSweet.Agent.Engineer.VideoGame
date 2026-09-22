@@ -44,7 +44,8 @@ public sealed partial class SpecialistAgent
             await using var shell = GameEngineerHarness.CreateShell(path);
             var client = context.CreateChatClient(new AgentLlmSelection(provider, model));
             var harness = client.AsHarnessAgent(await CalendarHarness.ConfigureAsync(context, GameEngineerHarness.CreateOptions(
-                context.Identity?.DisplayName ?? "Video Game Engineer", path, shell, null), token));
+                context.Identity?.DisplayName ?? "Video Game Engineer", path, shell, null,
+                SpecialistAgent.ResolveContextWindowTokens(Settings), SpecialistAgent.ResolveOutputTokens(Settings)), token));
             var session = await harness.CreateSessionAsync(token);
             var response = await harness.RunAsync(
                 $"Implement only this assigned game ticket. Assignment revision: {assignment.AssignmentRevision}. " +
