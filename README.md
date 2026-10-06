@@ -27,7 +27,7 @@ Keep `csweet-plugin.json` at the repository root. Import a reviewed GitHub commi
 clone this repository as an immediate child of C-Sweet's configured local agent catalog. Review
 the exact manifest, grants, activation mode, and source before approving installation.
 
-Built with `CSweet.Agent.SDK` 3.40.0 and the bundled video-game extension source.
+Built with `CSweet.Agent.SDK` 3.59.0 and the bundled video-game extension source.
 
 
 ## Extension ownership and isolated builds
@@ -59,3 +59,7 @@ Calendar-triggered assignments request the SDK claim/complete/block/release life
 ## Infrastructure
 
 The WebHost proof of concept and private-preview callbacks have been retired. Game implementation, source-control delivery and build authority remain separately scoped.
+
+## Hierarchical delivery
+
+The V2 assignment identifies Task, Story, Epic or Release scope. Tasks require an authorized sprint; aggregate reviews require an active delivery plan and do not invent sprint identities. Use the exact assigned branch, commit or artifact revision. Every task requires independent QA, including documents. Managers accept aggregate candidates using current evidence; task completion does not promote to main or authorize deployment.
