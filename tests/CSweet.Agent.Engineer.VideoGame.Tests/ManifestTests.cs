@@ -29,6 +29,10 @@ public sealed class ManifestTests
         Assert.Equal(3600, json.RootElement.GetProperty("provides")[0].GetProperty("executionTimeoutSeconds").GetInt32());
         Assert.Equal(agent.AgentId, manifest.Id);
         Assert.Equal(agent.Version, manifest.Version);
+        var roles = json.RootElement.GetProperty("rolePolicy").GetProperty("declaredRoleKeys")
+            .EnumerateArray().Select(role => role.GetString()).ToArray();
+        Assert.Equal(new[] { "game-engineer", "software-developer" }, roles);
+        Assert.True(RoleTaxonomy.SatisfiesRole(roles, "software-developer"));
         Assert.Contains(agent.PrimaryCapability, manifest.Capabilities);
         Assert.Empty(VideoGameSpecialistConformance.ValidateManifest(
             path, agent.AgentId, agent.DeclaredRoleKey, agent.PrimaryCapability));

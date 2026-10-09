@@ -5,6 +5,7 @@ Implements tested gameplay and runtime code, integrations, source-control delive
 ## Contract
 
 - Package ID: `com.csweet.video-game-engineer`
+- Hiring roles: `game-engineer` and shared base category `software-developer`; game specializations rank this agent alongside general software developers.
 - Version: `3.0.0`
 - Provides: `work.execution.run.v1`
 - Activation: manual

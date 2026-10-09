@@ -522,8 +522,9 @@ public static class VideoGameSpecialistConformance
             errors.Add("The package id does not match the specialist implementation.");
         var roles = root.GetProperty("rolePolicy").GetProperty("declaredRoleKeys")
             .EnumerateArray().Select(x => x.GetString()).Where(x => x is not null).ToHashSet(StringComparer.Ordinal);
-        if (!roles.SetEquals([expectedRoleKey]))
-            errors.Add("Every required specialist package must declare exactly its one accountable role.");
+        if (!roles.Contains(expectedRoleKey) || roles.Any(role =>
+                !RoleTaxonomy.SatisfiesRole([role], expectedRoleKey)))
+            errors.Add("Specialist packages must declare their accountable role and only aliases in the same core family.");
         var provided = root.GetProperty("provides").EnumerateArray()
             .Select(x => x.GetProperty("name").GetString()).Where(x => x is not null).Select(x => x!).ToHashSet(StringComparer.Ordinal);
         var executionCapabilities = provided.Where(x =>

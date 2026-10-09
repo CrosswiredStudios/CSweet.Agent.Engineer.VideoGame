@@ -5,7 +5,8 @@
   "rolePolicy": {
     "profile": "individual-contributor.v1",
     "declaredRoleKeys": [
-      "game-engineer"
+      "game-engineer",
+      "software-developer"
     ],
     "specializationKeys": [
       "video-game-development",
@@ -18,7 +19,7 @@
   },
   "id": "com.csweet.video-game-engineer",
   "name": "Adrian Silva",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "publisher": {
     "id": "com.csweet",
     "name": "C-Sweet"
