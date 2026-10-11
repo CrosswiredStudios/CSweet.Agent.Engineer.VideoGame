@@ -6,10 +6,10 @@ Implements tested gameplay and runtime code, integrations, source-control delive
 
 - Package ID: `com.csweet.video-game-engineer`
 - Hiring roles: `game-engineer` and shared base category `software-developer`; game specializations rank this agent alongside general software developers.
-- Version: `3.0.0`
-- Provides: `work.execution.run.v1`
+- Version: `3.2.3`
+- Provides: `work.execution.run.v1`, `work.execution.run.v2`, `work.execution.build-readiness.v1`
 - Activation: manual
-- Requested platform/provider capabilities: none
+- Requested platform/provider capabilities: governed work, repository, artifact and certified build operations (see `csweet-plugin.json`); release build-readiness uses the assigned delivery-plan read and existing build grants.
 - Event subscriptions: none
 - Network access: none
 
@@ -66,3 +66,7 @@ The WebHost proof of concept and private-preview callbacks have been retired. Ga
 The V2 assignment identifies Task, Story, Epic or Release scope. Tasks require an authorized sprint; aggregate reviews require an active delivery plan and do not invent sprint identities. Use the exact assigned branch, commit or artifact revision. Every task requires independent QA, including documents. Managers accept aggregate candidates using current evidence; task completion does not promote to main or authorize deployment.
 
 Model token settings default to 256,000 context-window tokens (maxContextWindowTokens) and 128,000 maximum output tokens (maxOutputTokens). Explicit installation settings override these defaults.
+
+## Certified release build-readiness
+
+SDK 3.63.0 allows the Producer to assign build-readiness to an updated Technical Director or Developer when no Build Release Engineer is available. The assigned agent must advertise `work.execution.build-readiness.v1` and V2 execution. `DeliveryBuildReadiness.ExecuteAsync` requests the configured certified provider build for every exact release repository candidate, returns durable pending build identities, and verifies successful output provenance. It grants no deployment, publication, or independent product approval authority. Existing project, repository and build grants remain required.
