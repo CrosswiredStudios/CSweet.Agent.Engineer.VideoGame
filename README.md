@@ -6,7 +6,7 @@ Implements tested gameplay and runtime code, integrations, source-control delive
 
 - Package ID: `com.csweet.video-game-engineer`
 - Hiring roles: `game-engineer` and shared base category `software-developer`; game specializations rank this agent alongside general software developers.
-- Version: `3.2.3`
+- Version: `3.3.0`
 - Provides: `work.execution.run.v1`, `work.execution.run.v2`, `work.execution.build-readiness.v1`
 - Activation: manual
 - Requested platform/provider capabilities: governed work, repository, artifact and certified build operations (see `csweet-plugin.json`); release build-readiness uses the assigned delivery-plan read and existing build grants.
@@ -28,7 +28,7 @@ Keep `csweet-plugin.json` at the repository root. Import a reviewed GitHub commi
 clone this repository as an immediate child of C-Sweet's configured local agent catalog. Review
 the exact manifest, grants, activation mode, and source before approving installation.
 
-Built with `CSweet.Agent.SDK` 3.59.0 and the bundled video-game extension source.
+Built with `CSweet.Agent.SDK` 3.65.0 and the bundled video-game extension source.
 
 
 ## Extension ownership and isolated builds
@@ -69,4 +69,8 @@ Model token settings default to 256,000 context-window tokens (maxContextWindowT
 
 ## Certified release build-readiness
 
-SDK 3.63.0 allows the Producer to assign build-readiness to an updated Technical Director or Developer when no Build Release Engineer is available. The assigned agent must advertise `work.execution.build-readiness.v1` and V2 execution. `DeliveryBuildReadiness.ExecuteAsync` requests the configured certified provider build for every exact release repository candidate, returns durable pending build identities, and verifies successful output provenance. It grants no deployment, publication, or independent product approval authority. Existing project, repository and build grants remain required.
+SDK 3.65.0 allows the Producer to assign build-readiness to an updated Technical Director or Developer when no Build Release Engineer is available. The assigned agent must advertise `work.execution.build-readiness.v1` and V2 execution. `DeliveryBuildReadiness.ExecuteAsync` requests the configured certified provider build for every exact release repository candidate, returns durable pending build identities, and verifies successful output provenance. It grants no deployment, publication, or independent product approval authority. Existing project, repository and build grants remain required.
+
+## Delegation and tracking
+
+SDK 3.65.0 dispatches authenticated delegation before specialist conversation fallback. The manifest requests delegation, work tracking, directory and conversation reads, personal commitments and model interpretation. These declarations require reviewed grants; existing resource permissions and approval rules still apply. The shared SDK owns coordinator reporting and wake recovery.
