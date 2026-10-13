@@ -6,7 +6,7 @@ Implements tested gameplay and runtime code, integrations, source-control delive
 
 - Package ID: `com.csweet.video-game-engineer`
 - Hiring roles: `game-engineer` and shared base category `software-developer`; game specializations rank this agent alongside general software developers.
-- Version: `3.3.0`
+- Version: `3.3.1`
 - Provides: `work.execution.run.v1`, `work.execution.run.v2`, `work.execution.build-readiness.v1`
 - Activation: manual
 - Requested platform/provider capabilities: governed work, repository, artifact and certified build operations (see `csweet-plugin.json`); release build-readiness uses the assigned delivery-plan read and existing build grants.
