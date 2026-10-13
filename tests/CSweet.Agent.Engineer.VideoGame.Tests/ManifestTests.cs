@@ -16,7 +16,7 @@ public sealed class ManifestTests
         var agent = new GameEngineerAgent();
 
         Assert.Equal("com.csweet.video-game-engineer", agent.AgentId);
-        Assert.Equal("3.4.0", agent.Version);
+        Assert.Equal("3.5.1", agent.Version);
         Assert.Equal(agent.AgentId, manifest.Id);
         Assert.Equal(agent.Version, manifest.Version);
         Assert.Contains(GameEngineerProfile.PrimaryCapability, manifest.Capabilities);
@@ -48,12 +48,14 @@ public sealed class ManifestTests
     }
 
     [Fact]
-    public void Manifest_RequestsOnlyBrokeredImplementationAuthority()
+    public void Manifest_RequestsReviewedImplementationAndRuntimeAuthority()
     {
         using var document = JsonDocument.Parse(
             File.ReadAllText(Path.Combine(RepositoryRoot(), "csweet-plugin.json")));
         var root = document.RootElement;
         Assert.True(root.GetProperty("rolePolicy").GetProperty("requiresProject").GetBoolean());
+        var internet = root.GetProperty("requires").EnumerateArray().Single(x => x.GetProperty("name").GetString() == RuntimePermissions.PublicInternet);
+        Assert.False(internet.GetProperty("modelVisible").GetBoolean());
         var required = root.GetProperty("requires")
             .EnumerateArray()
             .Select(item => item.GetProperty("name").GetString()!)
@@ -89,7 +91,7 @@ public sealed class ManifestTests
                 "platform.build.request.v2", "platform.build.read.v2",
                 "compute.provision.v1", "compute.read.v1", "compute.list.v1", "compute.execute.v1", "compute.stop.v1", "compute.destroy.v1", "network.inbound.v1", "network.publish-port.v1", "work.personal-todo.defer.v1", "communication.chat.read.v1", "communication.message.send.v1", AgentLifecycleCapabilities.CompleteOnboarding, CommunicationCapabilities.ChatCreate, GitWorkspaceCapabilities.ReservePersonal, "source-control.personal-work.prepare.v1", "platform.agent-operating-state.read.v1", "platform.agent-operating-state.write.v1", "platform.user-input.request.v1", "git.workspace.sync.v1", PersonalWorkPlanCapabilities.Create, PersonalWorkPlanCapabilities.ReportTask,
                 TaskDeliveryCapabilities.Submit, TaskDeliveryCapabilities.Read, TaskDeliveryCapabilities.Decide, TaskDeliveryCapabilities.Preferences, TaskDeliveryCapabilities.ChangePreference, TaskDeliveryCapabilities.List,
-                ..DelegationCapabilities.All, PlatformCapabilities.OrganizationSnapshotRead
+                ..DelegationCapabilities.All, PlatformCapabilities.OrganizationSnapshotRead, RuntimePermissions.PublicInternet
             ],
             required);
         Assert.Equal(

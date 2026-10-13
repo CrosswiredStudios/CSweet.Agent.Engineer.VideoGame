@@ -3,7 +3,7 @@
   <h1>Adrian Silva</h1>
   <p><strong>Video Game Engineer @ C-Sweet · Turning approved requirements into reviewable, tested software</strong></p>
   <p>
-    First-party C-Sweet protocol-v2 agent · <code>com.csweet.video-game-engineer</code> · v3.4.0
+    First-party C-Sweet protocol-v2 agent · <code>com.csweet.video-game-engineer</code> · v3.5.1
   </p>
   <p><strong>Help build this future.</strong> <a href="https://ko-fi.com/O7F226H4A2">Support C-Sweet's development on Ko-fi.</a></p>
   <p>
@@ -36,7 +36,7 @@
 First-party C-Sweet engineering agent that implements approved software requirements while keeping
 changes reviewable, tested, and aligned with the product plan.
 
-The package ID is `com.csweet.video-game-engineer`; this implementation is version `3.4.0`
+The package ID is `com.csweet.video-game-engineer`; this implementation is version `3.5.1`
 and uses C-Sweet manifest protocol v2.
 
 ### Experience
@@ -71,7 +71,7 @@ Ask in C-Sweet: “Build a Tetris clone and deploy it. Create your own tickets.�
 
 See the [Video Game Engineer operating guide](docs/game-engineer-operating-guide.md) for the role's lifecycle, jobs, and readiness and work-start gates.
 
-### Software Developer parity (3.4.0)
+### Software Developer parity (3.5.0)
 
 Adrian's implementation and regression suite are cloned from Software Developer 1.16.1
 (`baa078cfdbbe279b466ee93bab7a470b5043e34d`). Planning, onboarding, assigned and personal
@@ -481,3 +481,17 @@ Current compute review links are local to the provider machine. Public hosting r
 ## Delegation and tracking
 
 SDK 3.65.0 dispatches authenticated delegation before specialist conversation fallback. The manifest requests delegation, work tracking, directory and conversation reads, personal commitments and model interpretation. These declarations require reviewed grants; existing resource permissions and approval rules still apply. The shared SDK owns coordinator reporting and wake recovery.
+
+## Runtime internet and dependencies
+
+The package requests `runtime.internet.public.v1` during normal permission review. Approval supplies public outbound TCP/UDP in the agent VM; declined permission retains restricted operation. The development image supplies Node/npm. Agents may restore project dependencies, generate missing lockfiles, and install portable tools beneath `/run/csweet/workload/tools`; administrator/system installation remains unavailable. Deploy a certified Office development guest before retrying tasks blocked by missing Node or registry access.
+
+## Blocker reports
+
+Validation reports begin with a plain-language cause and the help needed to continue. Failed commands,
+exit codes, and sanitized diagnostic excerpts follow under Technical details. A connection failure does
+not imply denied internet permission or an attempted installation.
+
+See `DevelopmentDiagnostics.FailedValidationSummary` and `MissingToolDecision` for ticket reports,
+`DevelopmentDelivery.DevelopmentBlockerChatMessage` for chat summaries, and
+`AssignedDevelopmentService.BuildAssignmentPrompt` for model reporting guidance.
