@@ -1,0 +1,285 @@
+using System.Runtime.CompilerServices;
+using Microsoft.Agents.AI;
+using Microsoft.Extensions.AI;
+
+namespace CSweet.Agent.Engineer.VideoGame.Tests;
+
+public sealed class HarnessExecutionTests
+{
+    [Fact]
+    public async Task DiscussionWaitCheckpointsAndStopsWithoutDemandingAnOutcome()
+    {
+        var root = Path.Combine(Path.GetTempPath(), "csweet-discussion-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(root);
+        try
+        {
+            using var client = new ScriptedClient(false, promisesOnly: true);
+            await using var shell = GameEngineerHarness.CreateShell(root);
+            var harness = client.AsHarnessAgent(GameEngineerHarness.CreateOptions("Adrian", root, shell, null));
+            var session = await harness.CreateSessionAsync();
+            var saved = 0;
+            await GameEngineerHarness.RunImplementationAsync(harness, session, "Ask for clarification.", root, default,
+                _ => { saved++; return Task.CompletedTask; }, () => true);
+            Assert.Equal(1, client.Calls);
+            Assert.Equal(1, saved);
+            Assert.False(File.Exists(Path.Combine(root, ".csweet", "outcome.json")));
+        }
+        finally { Directory.Delete(root, true); }
+    }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    public async Task Executes_confined_file_tools_and_continues_an_incomplete_turn(bool stopEarly, bool reasoningToolHint)
+    {
+        var root = Path.Combine(Path.GetTempPath(), "csweet-harness-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(root);
+        try
+        {
+            using var client = new ScriptedClient(stopEarly, reasoningToolHint: reasoningToolHint);
+            await using var shell = GameEngineerHarness.CreateShell(root);
+            var harness = client.AsHarnessAgent(GameEngineerHarness.CreateOptions("Adrian", root, shell, null));
+            var session = await harness.CreateSessionAsync();
+            await GameEngineerHarness.RunImplementationAsync(harness, session, "Implement the ticket.", root, default);
+            Assert.Equal("implemented", await File.ReadAllTextAsync(Path.Combine(root, "app.txt")));
+            Assert.Equal("{}", await File.ReadAllTextAsync(Path.Combine(root, ".csweet", "outcome.json")));
+            Assert.Equal(3, client.Results);
+            Assert.Equal(stopEarly ? 5 : 4, client.Calls);
+        }
+        finally { Directory.Delete(root, true); }
+    }
+
+    [Theory]
+    [InlineData("<tool_call|>")]
+    [InlineData("<|tool_call>")]
+    [InlineData("<tool_call>")]
+    public async Task Misformatted_reasoning_tool_calls_checkpoint_then_report_provider_recovery_without_continuing(string marker)
+    {
+        var root = Path.Combine(Path.GetTempPath(), "csweet-harness-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(root);
+        try
+        {
+            await File.WriteAllTextAsync(Path.Combine(root, "partial.txt"), "Retained source");
+            using var client = new ScriptedClient(false, malformedToolCall: marker);
+            await using var shell = GameEngineerHarness.CreateShell(root);
+            var harness = client.AsHarnessAgent(GameEngineerHarness.CreateOptions("Adrian", root, shell, null));
+            var session = await harness.CreateSessionAsync();
+            string? checkpoint = null;
+            var error = await Assert.ThrowsAsync<ModelToolProtocolException>(() =>
+                GameEngineerHarness.RunImplementationAsync(harness, session, "Implement the ticket.", root, default,
+                    async ct => checkpoint = await File.ReadAllTextAsync(Path.Combine(root, "partial.txt"), ct)));
+            Assert.Equal("Retained source", checkpoint);
+            Assert.Equal(1, client.Calls);
+            Assert.Equal(0, client.Results);
+            Assert.True(DevelopmentFailurePolicy.IsOperational(error));
+            var diagnostic = DevelopmentDiagnostics.DevelopmentBlockerMessage(error, null, "Implementation");
+            Assert.Contains("model.tool_protocol", error.Message);
+            Assert.Contains("model.tool\\_protocol", diagnostic);
+            Assert.Contains("reasoning parsing", diagnostic);
+            Assert.Contains("retry the blocked ticket", diagnostic);
+            Assert.DoesNotContain("repair attempts are exhausted", diagnostic);
+        }
+        finally { Directory.Delete(root, true); }
+    }
+
+    [Fact]
+    public async Task Does_not_loop_forever_when_model_only_promises_work()
+    {
+        var root = Path.Combine(Path.GetTempPath(), "csweet-harness-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(root);
+        try
+        {
+            using var client = new ScriptedClient(false, promisesOnly: true);
+            await using var shell = GameEngineerHarness.CreateShell(root);
+            var harness = client.AsHarnessAgent(GameEngineerHarness.CreateOptions("Adrian", root, shell, null));
+            var session = await harness.CreateSessionAsync();
+            var error = await Assert.ThrowsAsync<InvalidOperationException>(() => GameEngineerHarness.RunImplementationAsync(
+                harness, session, "Implement the ticket.", root, default));
+            Assert.Contains("six bounded continuation", error.Message);
+            Assert.Equal(6, client.Calls);
+
+        }
+        finally { Directory.Delete(root, true); }
+    }
+
+    [Fact]
+    public async Task Reports_an_approval_pause_instead_of_misdiagnosing_a_missing_outcome()
+    {
+        var root = Path.Combine(Path.GetTempPath(), "csweet-harness-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(root);
+        try
+        {
+            using var client = new ScriptedClient(false, expectApproval: true);
+            await using var shell = GameEngineerHarness.CreateShell(root);
+            var options = GameEngineerHarness.CreateOptions("Adrian", root, shell, null);
+#pragma warning disable MAAI001
+            options.FileAccessProviderOptions!.DisableReadOnlyToolApproval = false;
+#pragma warning restore MAAI001
+            var harness = client.AsHarnessAgent(options);
+            var session = await harness.CreateSessionAsync();
+            var error = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                GameEngineerHarness.RunImplementationAsync(harness, session, "Implement the ticket.", root, default));
+            Assert.Contains("paused for a tool approval", error.Message);
+            Assert.Equal(1, client.Calls);
+            Assert.Equal(0, client.Results);
+        }
+        finally { Directory.Delete(root, true); }
+    }
+
+    [Fact]
+    public async Task Starts_a_clean_session_and_continues_from_retained_files_after_context_limit()
+    {
+        var root = Path.Combine(Path.GetTempPath(), "csweet-harness-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(root);
+        try
+        {
+            using var client = new ScriptedClient(false, contextLimitOnce: true);
+            await using var shell = GameEngineerHarness.CreateShell(root);
+            var options = GameEngineerHarness.CreateOptions("Adrian", root, shell, null, 220_000, 128_000);
+#pragma warning disable MAAI001
+            Assert.Equal(220_000, options.MaxContextWindowTokens);
+            Assert.Equal(128_000, options.MaxOutputTokens);
+#pragma warning restore MAAI001
+            var harness = client.AsHarnessAgent(options);
+            var session = await harness.CreateSessionAsync();
+
+            await GameEngineerHarness.RunImplementationAsync(
+                harness, session, "Implement the ticket.", root, default);
+
+            Assert.Equal("implemented", await File.ReadAllTextAsync(Path.Combine(root, "app.txt")));
+            Assert.True(File.Exists(Path.Combine(root, ".csweet", "outcome.json")));
+            Assert.Equal(4, client.Calls);
+        }
+        finally { Directory.Delete(root, true); }
+    }
+
+    [Fact]
+    public async Task Starts_a_clean_session_and_continues_from_retained_files_after_transport_interruption()
+    {
+        var root = Path.Combine(Path.GetTempPath(), "csweet-harness-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(root);
+        try
+        {
+            using var client = new ScriptedClient(false, transportFailureOnce: true);
+            await using var shell = GameEngineerHarness.CreateShell(root);
+            var harness = client.AsHarnessAgent(GameEngineerHarness.CreateOptions("Adrian", root, shell, null));
+            var session = await harness.CreateSessionAsync();
+
+            await GameEngineerHarness.RunImplementationAsync(
+                harness, session, "Implement the ticket.", root, default);
+
+            Assert.Equal("implemented", await File.ReadAllTextAsync(Path.Combine(root, "app.txt")));
+            Assert.True(File.Exists(Path.Combine(root, ".csweet", "outcome.json")));
+            Assert.Equal(4, client.Calls);
+        }
+        finally { Directory.Delete(root, true); }
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task Checkpoints_edits_before_recovering_or_returning_a_provider_failure(bool transient)
+    {
+        var root = Path.Combine(Path.GetTempPath(), "csweet-harness-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(root);
+        try
+        {
+            using var client = new InterruptedClient(transient);
+            await using var shell = GameEngineerHarness.CreateShell(root);
+            var harness = client.AsHarnessAgent(GameEngineerHarness.CreateOptions("Adrian", root, shell, null));
+            var session = await harness.CreateSessionAsync();
+            string? retained = null;
+            Task RunAsync() => GameEngineerHarness.RunImplementationAsync(harness, session, "Implement the ticket.", root,
+                default, async ct => retained = await File.ReadAllTextAsync(Path.Combine(root, "partial.txt"), ct));
+            if (transient) await RunAsync();
+            else await Assert.ThrowsAsync<InvalidOperationException>(RunAsync);
+            Assert.Equal("Retain these edits", retained);
+            Assert.Equal(transient, File.Exists(Path.Combine(root, ".csweet", "outcome.json")));
+        }
+        finally { Directory.Delete(root, true); }
+    }
+
+    private sealed class InterruptedClient(bool transient) : IChatClient
+    {
+        private int _calls;
+        public void Dispose() { }
+        public object? GetService(Type type, object? key = null) => null;
+        public Task<ChatResponse> GetResponseAsync(IEnumerable<ChatMessage> messages, ChatOptions? options = null,
+            CancellationToken cancellationToken = default) =>
+            GetStreamingResponseAsync(messages, options, cancellationToken).ToChatResponseAsync(cancellationToken);
+        public async IAsyncEnumerable<ChatResponseUpdate> GetStreamingResponseAsync(IEnumerable<ChatMessage> messages,
+            ChatOptions? options = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            var call = ++_calls;
+            if (call == 2)
+            {
+                if (transient) throw new HttpRequestException("The connection was interrupted.");
+                throw new InvalidOperationException("The inference provider has no model loaded.");
+            }
+            if (call is 1 or 3)
+                yield return new(ChatRole.Assistant, [new FunctionCallContent("write-" + call, "file_access_write",
+                    new Dictionary<string, object?> { ["fileName"] = call == 1 ? "partial.txt" : ".csweet/outcome.json",
+                        ["content"] = call == 1 ? "Retain these edits" : "{}", ["overwrite"] = true })]);
+            else yield return new(ChatRole.Assistant, "Complete.");
+        }
+    }
+
+    private sealed class ScriptedClient(
+        bool stopEarly,
+        bool promisesOnly = false,
+        bool expectApproval = false,
+        bool contextLimitOnce = false,
+        bool transportFailureOnce = false,
+        string? malformedToolCall = null,
+        bool reasoningToolHint = false) : IChatClient
+    {
+        public int Calls, Results;
+        public void Dispose() { }
+        public object? GetService(Type serviceType, object? serviceKey = null) => null;
+        public async Task<ChatResponse> GetResponseAsync(IEnumerable<ChatMessage> messages, ChatOptions? options = null, CancellationToken cancellationToken = default) =>
+            await GetStreamingResponseAsync(messages, options, cancellationToken).ToChatResponseAsync(cancellationToken);
+
+        public async IAsyncEnumerable<ChatResponseUpdate> GetStreamingResponseAsync(IEnumerable<ChatMessage> messages, ChatOptions? options = null,
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            await Task.Yield();
+            Calls++;
+            if (contextLimitOnce && Calls == 1)
+                throw new InvalidOperationException("The LLM request exceeds the message, text, or tool limit.");
+            if (transportFailureOnce && Calls == 1)
+                throw new HttpRequestException("Error while copying content to a stream.", new IOException("The response ended prematurely."));
+            Results = messages.SelectMany(x => x.Contents).OfType<FunctionResultContent>().Select(x => x.CallId).Distinct().Count();
+            if (malformedToolCall is not null)
+            {
+                yield return new(ChatRole.Assistant, [new TextReasoningContent(malformedToolCall[..4])]);
+                yield return new(ChatRole.Assistant, [new TextReasoningContent(malformedToolCall[4..] + "file_access_ls")]);
+                yield break;
+            }
+            if (promisesOnly || stopEarly && Calls == 1)
+            {
+                yield return new(ChatRole.Assistant, "I'll start by inspecting the workspace.");
+                yield break;
+            }
+            foreach (var result in messages.SelectMany(x => x.Contents).OfType<FunctionResultContent>())
+                Assert.DoesNotContain("Error", result.Result?.ToString() ?? "", StringComparison.OrdinalIgnoreCase);
+            var step = Calls - (stopEarly ? 1 : 0);
+            var name = step == 1 ? "file_access_ls" : "file_access_write";
+            if (step <= 3)
+            {
+                var tool = options!.Tools!.OfType<AIFunction>().Single(x => x.Name == name);
+                if (!expectApproval) Assert.IsNotType<ApprovalRequiredAIFunction>(tool);
+
+                var args = step == 1 ? new Dictionary<string, object?> { ["directory"] = "" } :
+                    new Dictionary<string, object?> { ["fileName"] = step == 2 ? "app.txt" : ".csweet/outcome.json",
+                        ["content"] = step == 2 ? "implemented" : "{}", ["overwrite"] = true };
+                var contents = new List<AIContent>();
+                if (reasoningToolHint) contents.Add(new TextReasoningContent("<tool_call|>"));
+                contents.Add(new FunctionCallContent("call-" + step, name, args));
+                yield return new(ChatRole.Assistant, contents);
+            }
+            else yield return new(ChatRole.Assistant, "Implementation complete.");
+        }
+    }
+}

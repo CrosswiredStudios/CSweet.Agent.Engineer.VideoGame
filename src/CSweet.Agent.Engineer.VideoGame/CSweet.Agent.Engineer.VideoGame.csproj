@@ -1,25 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <Version>3.3.1</Version>
+    <Version>3.4.0</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="CSweet.Agent.SDK" Version="3.65.1" />
     <PackageReference Include="CSweet.WorkManagement.Contracts" Version="3.29.0" />
-    <PackageReference Include="CSweet.Agent.SDK" Version="3.65.1" Condition="'$(UseLocalCSweetAgentSdk)' != 'true'" />
-    <ProjectReference Include="$(CSweetAgentSdkRepositoryRoot)\\src\\CSweet.Agent.SDK\\CSweet.Agent.SDK.csproj" Condition="'$(UseLocalCSweetAgentSdk)' == 'true'" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.Agents.AI.Harness" Version="1.15.0" />
     <PackageReference Include="Microsoft.Agents.AI.Tools.Shell" Version="1.15.0-preview.260722.1" />
-    <InternalsVisibleTo Include="CSweet.Agent.Engineer.VideoGame.Tests" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
-    <Content Include="..\..\csweet-plugin.json" Link="csweet-plugin.json" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath="content\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="../../extensions/video-game/*.cs" Link="Extension/%(Filename)%(Extension)" />
+    <Content Include="..\..\csweet-plugin.json" Link="csweet-plugin.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

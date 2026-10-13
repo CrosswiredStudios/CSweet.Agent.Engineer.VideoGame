@@ -3,7 +3,7 @@ using CSweet.WorkManagement.Contracts;
 
 namespace CSweet.Agent.Engineer.VideoGame;
 
-public sealed partial class SpecialistAgent
+public sealed partial class GameEngineerAgent
 {
     protected override Task<AgentWorkResult> ExecuteDeliveryScopeAsync(WorkExecutionAssignmentV2 assignment,
         AgentRuntimeContext context, CancellationToken ct) => assignment.StageKey == "build-readiness"

@@ -1,55 +1,178 @@
+using System.Text.Json;
 using CSweet.Agent.SDK;
-using CrosswiredStudios.VideoGame.AgentKit;
+using CSweet.WorkManagement.Contracts;
 
 namespace CSweet.Agent.Engineer.VideoGame.Tests;
 
 public sealed class ManifestTests
 {
     [Fact]
-    public async Task Manifest_IsValidAndMatchesAgent()
+    public async Task Manifest_IsValidAndMatchesImplementation()
     {
         var root = RepositoryRoot();
         var path = Path.Combine(root, "csweet-plugin.json");
 
         var manifest = await AgentManifestLoader.LoadAsync(path, CancellationToken.None);
-        var agent = new SpecialistAgent();
+        var agent = new GameEngineerAgent();
 
-        using var tokenManifest = System.Text.Json.JsonDocument.Parse(await File.ReadAllTextAsync(path));
-        var tokenFields = tokenManifest.RootElement.GetProperty("configuration").EnumerateArray()
-            .Where(field => field.GetProperty("key").GetString() is
-                "maxContextWindowTokens" or "maxOutputTokens");
-        Assert.All(tokenFields, field => Assert.False(field.TryGetProperty("maximum", out _)));
-
-        using var json = System.Text.Json.JsonDocument.Parse(await File.ReadAllTextAsync(path));
-        Assert.Equal("ReadWrite", json.RootElement.GetProperty("runtime").GetProperty("workspaceAccess").GetString());
-        Assert.Equal("software-development-polyglot-v1", json.RootElement.GetProperty("runtime").GetProperty("environmentProfile").GetString());
-        var capabilities = json.RootElement.GetProperty("requires").EnumerateArray().Select(x => x.GetProperty("name").GetString()).ToArray();
-        foreach (var operation in new[] { "prepare", "inspect", "publish", "cleanup" })
-            Assert.Contains($"git.workspace.{operation}.v2", capabilities);
-        Assert.Equal(3600, json.RootElement.GetProperty("provides")[0].GetProperty("executionTimeoutSeconds").GetInt32());
+        Assert.Equal("com.csweet.video-game-engineer", agent.AgentId);
+        Assert.Equal("3.4.0", agent.Version);
         Assert.Equal(agent.AgentId, manifest.Id);
         Assert.Equal(agent.Version, manifest.Version);
-        var roles = json.RootElement.GetProperty("rolePolicy").GetProperty("declaredRoleKeys")
-            .EnumerateArray().Select(role => role.GetString()).ToArray();
-        Assert.Equal(new[] { "game-engineer", "software-developer" }, roles);
-        Assert.True(RoleTaxonomy.SatisfiesRole(roles, "software-developer"));
-        Assert.Contains(agent.PrimaryCapability, manifest.Capabilities);
-        Assert.Empty(VideoGameSpecialistConformance.ValidateManifest(
-            path, agent.AgentId, agent.DeclaredRoleKey, agent.PrimaryCapability));
-        Assert.True(VideoGameSpecialistConformance.StateKeysAreIsolated(
-            agent.DeclaredRoleKey, Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()));
+        Assert.Contains(GameEngineerProfile.PrimaryCapability, manifest.Capabilities);
+        Assert.Contains(WorkManagementCapabilityNames.ExecutionRunV1, manifest.Capabilities);
+        Assert.Contains(DeliveryBuildReadiness.ExecutionCapability, manifest.Capabilities);
+        Assert.Contains(AgentConfigurationCapabilities.Describe, manifest.Capabilities);
+        Assert.Contains(AgentConfigurationCapabilities.Update, manifest.Capabilities);
+        using var document = JsonDocument.Parse(await File.ReadAllTextAsync(path));
+        Assert.Equal("individual-contributor.v1",
+            document.RootElement.GetProperty("rolePolicy").GetProperty("profile").GetString());
+        Assert.Equal(["game-engineer", "software-developer"],
+            document.RootElement.GetProperty("rolePolicy").GetProperty("declaredRoleKeys")
+                .EnumerateArray().Select(role => role.GetString()!).ToArray());
+        Assert.Equal("Adrian Silva", document.RootElement.GetProperty("name").GetString());
+        Assert.Equal("game-engineer", document.RootElement.GetProperty("catalog")
+            .GetProperty("role").GetProperty("key").GetString());
+        var configuration = document.RootElement.GetProperty("configuration").EnumerateArray().ToArray();
+        Assert.Equal(
+            GameEngineerHarness.DefaultContextWindowTokens,
+            configuration.Single(field => field.GetProperty("key").GetString() == "maxContextWindowTokens")
+                .GetProperty("defaultValue").GetInt32());
+        Assert.Equal(
+            GameEngineerHarness.DefaultOutputTokens,
+            configuration.Single(field => field.GetProperty("key").GetString() == "maxOutputTokens")
+                .GetProperty("defaultValue").GetInt32());
         Assert.True(File.Exists(Path.Combine(
             root,
             manifest.Runtime.ProjectPath!.Replace('/', Path.DirectorySeparatorChar))));
     }
 
+    [Fact]
+    public void Manifest_RequestsOnlyBrokeredImplementationAuthority()
+    {
+        using var document = JsonDocument.Parse(
+            File.ReadAllText(Path.Combine(RepositoryRoot(), "csweet-plugin.json")));
+        var root = document.RootElement;
+        Assert.True(root.GetProperty("rolePolicy").GetProperty("requiresProject").GetBoolean());
+        var required = root.GetProperty("requires")
+            .EnumerateArray()
+            .Select(item => item.GetProperty("name").GetString()!)
+            .ToArray();
+
+        Assert.Equal(
+            [WorkDeliveryCapabilities.Read, PlatformCapabilities.ArtifactSubmit, PlatformCapabilities.ArtifactCreate, PlatformCapabilities.ArtifactRead, WorkBoardCapabilities.Read, ProjectIntakeCapabilities.Retain, ProjectIntakeCapabilities.Read, ProjectIntakeCapabilities.List, ProjectIntakeCapabilities.Discover, ProjectIntakeCapabilities.Choose, ProjectIntakeCapabilities.Start, ProjectIntakeCapabilities.Manager, "work.calendar.read.v1", "work.calendar.create.v1", "work.calendar.update.v1", "work.calendar.cancel.v1", "work.calendar.schedule.v1",
+                PersonalTodoCapabilities.Read,
+                PersonalTodoCapabilities.Add,
+                PersonalTodoCapabilities.Reorder,
+                PersonalTodoCapabilities.Requeue,
+                PersonalTodoCapabilities.Claim,
+                PersonalTodoCapabilities.Complete,
+                PersonalTodoCapabilities.Block,
+                PersonalTodoCapabilities.Release,
+                GameEngineerProfile.TeamRosterCapability,
+                GameEngineerProfile.LlmCapability,
+                WorkItemCapabilities.Read,
+                WorkItemCapabilities.Comment,
+                WorkManagementCapabilityNames.ItemCommentUpdateV1,
+                WorkManagementCapabilityNames.ItemCommentDeleteV1,
+                WorkItemCapabilities.ReadComments,
+                WorkOrchestrationCapabilities.Read,
+                WorkOrchestrationCapabilities.Retry,
+                CommunicationCapabilities.CoordinationStartWork,
+                CommunicationCapabilities.CoordinationRespond,
+                CommunicationCapabilities.CoordinationRead,
+                GitWorkspaceCapabilities.Prepare,
+                GitWorkspaceCapabilities.Refresh,
+                GitWorkspaceCapabilities.Inspect,
+                GitWorkspaceCapabilities.Publish,
+                GitWorkspaceCapabilities.Cleanup,
+                "platform.build.request.v2", "platform.build.read.v2",
+                "compute.provision.v1", "compute.read.v1", "compute.list.v1", "compute.execute.v1", "compute.stop.v1", "compute.destroy.v1", "network.inbound.v1", "network.publish-port.v1", "work.personal-todo.defer.v1", "communication.chat.read.v1", "communication.message.send.v1", AgentLifecycleCapabilities.CompleteOnboarding, CommunicationCapabilities.ChatCreate, GitWorkspaceCapabilities.ReservePersonal, "source-control.personal-work.prepare.v1", "platform.agent-operating-state.read.v1", "platform.agent-operating-state.write.v1", "platform.user-input.request.v1", "git.workspace.sync.v1", PersonalWorkPlanCapabilities.Create, PersonalWorkPlanCapabilities.ReportTask,
+                TaskDeliveryCapabilities.Submit, TaskDeliveryCapabilities.Read, TaskDeliveryCapabilities.Decide, TaskDeliveryCapabilities.Preferences, TaskDeliveryCapabilities.ChangePreference, TaskDeliveryCapabilities.List,
+                ..DelegationCapabilities.All, PlatformCapabilities.OrganizationSnapshotRead
+            ],
+            required);
+        Assert.Equal(
+            "software-development-polyglot-v1",
+            root.GetProperty("runtime").GetProperty("environmentProfile").GetString());
+        Assert.Equal(
+            "ReadWrite",
+            root.GetProperty("runtime").GetProperty("workspaceAccess").GetString());
+        Assert.Equal("Allowlist", root.GetProperty("webAccess").GetProperty("mode").GetString());
+        Assert.Empty(root.GetProperty("credentials").EnumerateArray());
+        Assert.Equal(
+            [TicketConversations.Discussion.Changed, ProjectIntakeCapabilities.Changed, AgentLifecycleEvents.Onboarded, "com.csweet.calendar.reminder-due.v1", PersonalTodoEvents.Available, CommunicationEvents.MessageMentioned,
+                AgentCoordinationEvents.TurnRequested, CommunicationEvents.MessageReceived, "com.csweet.compute.changed.v1", "com.csweet.compute.available.v1", TaskDeliveryCapabilities.Changed, DelegationCapabilities.Received, DelegationCapabilities.Changed, AgentAttentionEvents.ReviewDue],
+            root.GetProperty("events").GetProperty("subscribes")
+                .EnumerateArray().Select(item => item.GetString()!).ToArray());
+    }
+
+    [Fact]
+    public void Source_UsesOnlyWorkspaceConfinedLocalInfrastructureAccess()
+    {
+        var sourceRoot = Path.Combine(RepositoryRoot(), "src");
+        var source = string.Join(
+            "\n",
+            Directory.EnumerateFiles(sourceRoot, "*.cs", SearchOption.AllDirectories)
+                .Select(File.ReadAllText));
+
+        Assert.Contains("LocalShellExecutor", source, StringComparison.Ordinal);
+        Assert.Contains("FileSystemAgentFileStore", source, StringComparison.Ordinal);
+
+        string[] forbidden =
+        [
+            "System.Diagnostics.Process",
+            "new HttpClient",
+            "JsonRpc",
+            "workloadToken",
+            "leaseToken",
+            "git push --force"
+        ];
+
+        foreach (var value in forbidden)
+            Assert.DoesNotContain(value, source, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ManifestConfiguration_IsAcceptedByRuntimeIncludingBlankOptionalComputeSettings()
+    {
+        using var document = JsonDocument.Parse(
+            await File.ReadAllTextAsync(Path.Combine(RepositoryRoot(), "csweet-plugin.json")));
+        var declared = document.RootElement.GetProperty("configuration").EnumerateArray().ToArray();
+        var agent = new GameEngineerAgent();
+        var runtime = new AgentTestRuntime();
+        var described = await runtime.ExecuteCapabilityAsync(agent, AgentConfigurationCapabilities.Describe, new { });
+        Assert.True(described.Succeeded);
+        var actual = described.Value!.Value.GetProperty("fields").EnumerateArray().ToArray();
+        Assert.Equal(declared.Select(x => x.GetProperty("key").GetString()).Order(),
+            actual.Select(x => x.GetProperty("key").GetString()).Order());
+        foreach (var field in declared)
+        {
+            var key = field.GetProperty("key").GetString();
+            var runtimeField = actual.Single(x => x.GetProperty("key").GetString() == key);
+            var expectedType = field.GetProperty("type").GetString() switch { "provider" => "llmProvider", "model" => "llmModel", var type => type };
+            Assert.Equal(expectedType, runtimeField.GetProperty("type").GetString());
+            Assert.Equal(field.GetProperty("required").GetBoolean(), runtimeField.GetProperty("required").GetBoolean());
+        }
+        var settings = declared.ToDictionary(x => x.GetProperty("key").GetString()!, x =>
+            x.TryGetProperty("defaultValue", out var value) ? value.Clone() : JsonSerializer.SerializeToElement(""));
+        settings["llmProviderId"] = JsonSerializer.SerializeToElement(Guid.NewGuid());
+        settings["llmModel"] = JsonSerializer.SerializeToElement("test-coding-model");
+        var applied = await runtime.ExecuteCapabilityAsync(agent, AgentConfigurationCapabilities.Update, new { settings });
+        Assert.True(applied.Succeeded, applied.Error);
+    }
     private static string RepositoryRoot()
     {
         var directory = new DirectoryInfo(AppContext.BaseDirectory);
         while (directory is not null &&
-               (!File.Exists(Path.Combine(directory.FullName, "csweet-plugin.json")) ||
-                !Directory.Exists(Path.Combine(directory.FullName, "src"))))
+               !File.Exists(Path.Combine(
+                   directory.FullName,
+                   "CSweet.Agent.Engineer.VideoGame.slnx")))
+        {
             directory = directory.Parent;
-        return directory?.FullName ?? throw new InvalidOperationException("Repository root was not found.");
+        }
+
+        return directory?.FullName
+            ?? throw new InvalidOperationException("Repository root was not found.");
     }
 }

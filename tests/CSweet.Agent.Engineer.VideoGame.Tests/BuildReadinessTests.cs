@@ -34,7 +34,7 @@ public sealed class BuildReadinessTests
             "Release", planId, 1, null, null, 1, "Release", null, "build-readiness", 0, 1, DateTimeOffset.UtcNow.AddHours(1), "Build candidate", JsonSerializer.SerializeToElement(new { }),
             JsonSerializer.SerializeToElement(new { }), [], [], candidate) { OrganizationUserId = employee, AgentInstallationId = installation, PlanningRevision = 1,
                 PermittedOutcomes = ["approved", "changes_requested", "awaiting-build"] };
-        var agent = new SpecialistAgent();
+        var agent = new GameEngineerAgent();
         var result = await agent.ExecuteCapabilityAsync(new(Guid.NewGuid(), explicitCapability ? DeliveryBuildReadiness.ExecutionCapability : WorkManagementCapabilityNames.ExecutionRunV2,
             JsonSerializer.SerializeToElement(assignment, new JsonSerializerOptions(JsonSerializerDefaults.Web)), "test"), runtime.CreateContext(assignment.OrganizationId.ToString(), installation.ToString()), CancellationToken.None);
         Assert.True(result.Succeeded, result.Error);

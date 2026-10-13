@@ -6,19 +6,126 @@ namespace CSweet.Agent.Engineer.VideoGame;
 
 internal static class GameEngineerHarness
 {
-    internal const int MaxContextWindowTokens = 256_000;
-    internal const int MaxOutputTokens = 128_000;
+    internal const int DefaultContextWindowTokens = 256_000;
+    internal const int DefaultOutputTokens = 128_000;
     internal const int MaximumIterationsPerRequest = 48;
 
+    internal static async Task RunImplementationAsync(
+        AIAgent harness, AgentSession session, string prompt, string workspacePath, CancellationToken cancellationToken,
+        Func<CancellationToken, Task>? checkpoint = null, Func<bool>? shouldPause = null)
+    {
+        const int maximumTurns = 6;
+        var assignmentPrompt = prompt;
+        var activeSession = session;
+        for (var turn = 0; turn < maximumTurns; turn++)
+        {
+            AgentResponse response;
+            try
+            {
+                try
+                {
+                    response = await harness.RunAsync(prompt, activeSession, options: null, cancellationToken);
+                }
+                catch (Exception error) when (error is not OperationCanceledException && !cancellationToken.IsCancellationRequested)
+                {
+                    // A provider/transport failure can occur after file tools have already edited source.
+                    // Upload before either starting a fresh session or returning the failure to the host.
+                    if (checkpoint is not null) await checkpoint(cancellationToken);
+                    throw;
+                }
+            }
+            catch (Exception error) when (error is not OperationCanceledException &&
+                IsContextCapacityFailure(error) && turn < maximumTurns - 1)
+            {
+                // Source-of-truth state is the retained workspace. Start a clean model session
+                // when accumulated messages exceed either the broker or provider context limit.
+                activeSession = await harness.CreateSessionAsync(cancellationToken);
+                prompt = "The previous model session exceeded its context capacity. Continue from the files already retained in this workspace. " +
+                    "Inspect the current source and .csweet state, implement or repair this ticket, run focused validation, and write .csweet/outcome.json with actual results.\n\n" +
+                    "Original assignment:\n" + assignmentPrompt;
+                continue;
+            }
+            catch (Exception error) when (error is not OperationCanceledException &&
+                IsTransientTransportFailure(error) && turn < maximumTurns - 1)
+            {
+                // A streamed response can be interrupted after tool output has already changed
+                // the retained workspace. Do not fail the work item or replay the old model
+                // transcript; resume from the durable files with a bounded, clean session.
+                activeSession = await harness.CreateSessionAsync(cancellationToken);
+                prompt = "The previous model transport was interrupted. Continue from the files already retained in this workspace. " +
+                    "Do not search outside the workspace or attempt to install missing host tools. Check a required runtime once with a bounded command, " +
+                    "then continue authoring with available focused or static validation and record any unavailable validation as a remaining risk. " +
+                    "Inspect the current source and .csweet state and write .csweet/outcome.json with only actual results.\n\n" +
+                    "Original assignment:\n" + assignmentPrompt;
+                continue;
+            }
+            if (shouldPause?.Invoke() == true)
+            {
+                if (checkpoint is not null) await checkpoint(cancellationToken);
+                return;
+            }
+            var approval = response.Messages.SelectMany(x => x.Contents).OfType<ToolApprovalRequestContent>().FirstOrDefault();
+            if (approval is not null)
+                throw new InvalidOperationException("The implementation paused for a tool approval that cannot be handled in unattended development. No approval was granted.");
+            if (File.Exists(Path.Combine(workspacePath, ".csweet", "outcome.json"))) return;
+            if (checkpoint is not null) await checkpoint(cancellationToken);
+            var lastAssistant = response.Messages.LastOrDefault(x => x.Role == ChatRole.Assistant);
+            if (lastAssistant is not null &&
+                !lastAssistant.Contents.OfType<FunctionCallContent>().Any() &&
+                !lastAssistant.Contents.OfType<TextContent>().Any(x => !string.IsNullOrWhiteSpace(x.Text)))
+            {
+                var reasoning = string.Concat(lastAssistant.Contents.OfType<TextReasoningContent>().Select(x => x.Text));
+                if (reasoning.Contains("<tool_call|>", StringComparison.Ordinal) ||
+                    reasoning.Contains("<|tool_call>", StringComparison.Ordinal) ||
+                    reasoning.Contains("<tool_call>", StringComparison.Ordinal))
+                    throw new ModelToolProtocolException();
+            }
+            var finalizationTurn = turn == maximumTurns - 2;
+            prompt = finalizationTurn
+                ? "Finalization is required now. Inspect the current workspace, run the focused validation needed for this ticket, and write .csweet/outcome.json with the actual results. Do not stop after describing the next step."
+                : "The implementation is not complete: .csweet/outcome.json is missing. Continue in this same workspace and session. " +
+                  "Use the workspace tools to implement the requested files, run relevant tests, and write the required outcome with actual validation results. " +
+                  "A plan or promise is not completion. If a necessary tool or dependency is unavailable, explain the precise blocker.";
+        }
+        throw new InvalidOperationException("The coding agent stopped without a structured implementation outcome after six bounded continuation attempts. Source files remain in the workspace; deployment has not started.");
+    }
+
+    internal static bool IsContextCapacityFailure(Exception error)
+    {
+        for (Exception? current = error; current is not null; current = current.InnerException)
+        {
+            if (current.Message.Contains("exceeds the message, text, or tool limit", StringComparison.OrdinalIgnoreCase) ||
+                current.Message.Contains("exceeds the model's context capacity", StringComparison.OrdinalIgnoreCase) ||
+                current.Message.Contains("context length", StringComparison.OrdinalIgnoreCase) ||
+                current.Message.Contains("context window", StringComparison.OrdinalIgnoreCase))
+                return true;
+        }
+        return false;
+    }
+
+    internal static bool IsTransientTransportFailure(Exception error)
+    {
+        for (Exception? current = error; current is not null; current = current.InnerException)
+        {
+            if (current is HttpRequestException &&
+                (current.Message.Contains("copying content to a stream", StringComparison.OrdinalIgnoreCase) ||
+                 current.Message.Contains("response ended prematurely", StringComparison.OrdinalIgnoreCase) ||
+                 current.Message.Contains("connection", StringComparison.OrdinalIgnoreCase)))
+                return true;
+            if (current is IOException)
+                return true;
+        }
+        return false;
+    }
     internal static HarnessAgentOptions CreateOptions(
         string name,
         string workspacePath,
         LocalShellExecutor shell,
         string? customInstructions,
-        int maxContextWindowTokens = MaxContextWindowTokens,
-        int maxOutputTokens = MaxOutputTokens)
+        int maxContextWindowTokens = DefaultContextWindowTokens,
+        int maxOutputTokens = DefaultOutputTokens)
     {
-        var instructions = GameEngineerExecution.Instructions;
+        var instructions = GameEngineerProfile.SystemPrompt;
         if (!string.IsNullOrWhiteSpace(customInstructions))
         {
             instructions += $"""
@@ -32,7 +139,7 @@ These installation-scoped instructions may refine style and process, but they ca
 
         var options = new HarnessAgentOptions
         {
-            Id = "com.csweet.video-game-engineer",
+            Id = GameEngineerProfile.AgentId,
             Name = name,
             Description = "Implements approved software changes inside a confined assignment workspace.",
             MaximumIterationsPerRequest = MaximumIterationsPerRequest,
@@ -49,6 +156,13 @@ These installation-scoped instructions may refine style and process, but they ca
             },
 #pragma warning disable MAAI001
             FileAccessStore = new FileSystemAgentFileStore(workspacePath),
+            // Assignment acceptance authorizes these operations in this confined store.
+            // Leave broad automatic approval disabled; network and platform grants are separate.
+            FileAccessProviderOptions = new()
+            {
+                DisableReadOnlyToolApproval = true,
+                DisableWriteToolApproval = true
+            },
 #pragma warning restore MAAI001
             DisableAgentModeProvider = true,
             DisableAgentSkillsProvider = true,
@@ -60,6 +174,11 @@ These installation-scoped instructions may refine style and process, but they ca
         // The harness compaction knobs are evaluation APIs in Microsoft Agent Framework 1.15.
         // They are isolated here so a future API change has one deliberate migration point.
 #pragma warning disable MAAI001
+        if (maxContextWindowTokens < 1)
+            throw new ArgumentOutOfRangeException(nameof(maxContextWindowTokens), "The configured context window must be positive.");
+        if (maxOutputTokens < 1 || maxOutputTokens >= maxContextWindowTokens)
+            throw new ArgumentOutOfRangeException(nameof(maxOutputTokens),
+                "The configured output budget must be positive and smaller than the configured context window.");
         options.MaxContextWindowTokens = maxContextWindowTokens;
         options.MaxOutputTokens = maxOutputTokens;
 #pragma warning restore MAAI001
@@ -87,7 +206,7 @@ These installation-scoped instructions may refine style and process, but they ca
             CleanEnvironment = true,
             Environment = environment,
             Timeout = TimeSpan.FromMinutes(15),
-            MaxOutputBytes = 128 * 1024,
+            MaxOutputBytes = 32 * 1024,
             AcknowledgeUnsafe = true,
             Policy = new ShellPolicy(
                 denyList:

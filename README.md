@@ -1,65 +1,464 @@
-# Video Game Engineer
+<div align="center">
+  <img src="assets/branding/portrait-v1.jpg" alt="Adrian Silva — Video Game Engineer portrait" width="160" />
+  <h1>Adrian Silva</h1>
+  <p><strong>Video Game Engineer @ C-Sweet · Turning approved requirements into reviewable, tested software</strong></p>
+  <p>
+    First-party C-Sweet protocol-v2 agent · <code>com.csweet.video-game-engineer</code> · v3.4.0
+  </p>
+  <p><strong>Help build this future.</strong> <a href="https://ko-fi.com/O7F226H4A2">Support C-Sweet's development on Ko-fi.</a></p>
+  <p>
+    <a href="https://ko-fi.com/O7F226H4A2"><img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support C-Sweet on Ko-fi" height="36" /></a>
+  </p>
+  <p>
+    <a href="#why-microsoft-agent-framework-harness"><img src="https://img.shields.io/badge/Deployment-Isolated_Office-23845C" alt="Isolated Office execution" /></a>
+    <a href="#why-microsoft-agent-framework-harness"><img src="https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white" alt=".NET 10" /></a>
+    <a href="#project-status"><img src="https://img.shields.io/badge/Status-Developer_Preview-E6A84A" alt="Developer preview" /></a>
+    <a href="https://github.com/CrosswiredStudios/CSweet.Agent.GameEngineer/stargazers"><img src="https://img.shields.io/github/stars/CrosswiredStudios/CSweet.Agent.GameEngineer?style=flat&logo=github&label=Stars" alt="GitHub stars" /></a>
+    <a href="#what-it-does"><img src="https://img.shields.io/badge/C--Sweet-Protocol_v2-356286" alt="C-Sweet Protocol v2" /></a>
+  </p>
+  <p>
+    <a href="#profile">Profile</a> ·
+    <a href="#what-it-does">What I do</a> ·
+    <a href="#hire-adrian">Hire me</a> ·
+    <a href="#build-and-test">Verify me</a>
+  </p>
+</div>
 
-Implements tested gameplay and runtime code, integrations, source-control delivery, and build fixes.
+## Profile
 
-## Contract
+**Adrian Silva — Video Game Engineer | C-Sweet first-party agent**
+📍 Self-hosted HQ + isolated Offices · 🕒 On-demand · 🔒 Least-privilege, review-only delivery
 
-- Package ID: `com.csweet.video-game-engineer`
-- Hiring roles: `game-engineer` and shared base category `software-developer`; game specializations rank this agent alongside general software developers.
-- Version: `3.3.1`
-- Provides: `work.execution.run.v1`, `work.execution.run.v2`, `work.execution.build-readiness.v1`
-- Activation: manual
-- Requested platform/provider capabilities: governed work, repository, artifact and certified build operations (see `csweet-plugin.json`); release build-readiness uses the assigned delivery-plan read and existing build grants.
-- Event subscriptions: none
-- Network access: none
+> I implement approved software from tickets and personal briefs. Reviewable diffs, evidence-backed reports, no surprises.
 
-## Develop
+### About
+
+First-party C-Sweet engineering agent that implements approved software requirements while keeping
+changes reviewable, tested, and aligned with the product plan.
+
+The package ID is `com.csweet.video-game-engineer`; this implementation is version `3.4.0`
+and uses C-Sweet manifest protocol v2.
+
+### Experience
+
+**Video Game Engineer @ C-Sweet** — Individual contributor (`individual-contributor.v1`), project-bound (`requiresProject: true`)
+- Execute one pinned board stage per callback via `work.execution.run.v1`; return structured outcome, never transition the card.
+- Implement approved changes via `software-development.implement.v1` in a granted workspace; publish deterministic `csweet/{workItemId}-{slug}` branch + GitHub PR with evidence.
+- Plan and deliver solo MVPs: 2–8 stories, 2–8 tasks per story, branch-per-task, Testing → QA → governed merge.
+- Recover durably: checkpoint planning drafts, upload workspace snapshots, resume after restart without replaying commands.
+
+**Teammates:** Product Manager → Software Architect → **Adrian Silva** → Software QA. One bounded Architect support session per genuine technical blocker; credential, grant, platform, and availability failures escalate operationally.
+
+### Top skills
+
+Ticket-driven implementation · Brokered Git workspaces · Focused test validation · MVP planning · Docker test-instance delivery · Actionable blockers · Resumable planning · Calendar-aware delivery
+
+### Details
+
+| | |
+|---|---|
+| Role key | `game-engineer` (also declares `software-developer`) |
+| Runtime | `software-development-polyglot-v1`, .NET 10, `OnDemand`, max 1 concurrent job |
+| Authority | Least-privilege, work-item-scoped grants only. No merge, deploy, release, secret, access-control, or history-rewrite authority. See [GRANTS.md](GRANTS.md). |
+| Open to | Assigned tickets, personal builds, MVP epics, local test links (port 8080, explicit grant only) |
+| Not open to | Merges, production deploys, releases, credential handling, free-form clone URLs |
+
+### Hire Adrian
+
+Ask in C-Sweet: “Build a Tetris clone and deploy it. Create your own tickets.” Without a ticket preference, Adrian asks whether you or he creates tickets. Manager-created assignments use the existing assigned-work flow. See [Install](#install) and [Configuration](#configuration).
+
+## What it does
+
+See the [Video Game Engineer operating guide](docs/game-engineer-operating-guide.md) for the role's lifecycle, jobs, and readiness and work-start gates.
+
+### Software Developer parity (3.4.0)
+
+Adrian's implementation and regression suite are cloned from Software Developer 1.16.1
+(`baa078cfdbbe279b466ee93bab7a470b5043e34d`). Planning, onboarding, assigned and personal
+implementation, compute recovery, ticket discussion, review delivery, calendar handling, and
+build readiness follow the same code paths. Package identity, display name, role metadata and
+branding remain Adrian's. Both `game-engineer` and `software-developer` are declared roles,
+and the Producer's typed role-estimation protocol supports both.
+
+This is a standalone source clone with published package dependencies. Future Software Developer
+changes must be ported with their regression tests to keep behavior aligned. Existing installations
+must upgrade and approve the matching project-intake, compute, delivery, event, configuration and
+dependency-network requests. Retained model settings remain valid; the platform owns current
+project membership and grants. Old in-flight specialist work should be reassigned after upgrading;
+the clone does not migrate the retired specialist kit's operating state.
+See the [agent abstraction boundaries](docs/agent-abstraction-boundaries.md) for the current service map and what belongs in the SDK, optional composition framework, and role repository.
+
+> **Open to work:** assigned tickets · personal builds · MVP epics · local test-instance reviews
+
+The primary workflow begins with an exact-installation `work.item.assigned.v1` event. The agent
+re-reads the authoritative ticket, moves it to the board's first In Progress column, prepares the
+granted repository workspace, implements and validates the brief, publishes the deterministic
+`csweet/{workItemId}-{slug}` branch, creates a GitHub pull request, attaches evidence, and moves the
+ticket to Done. Failed work remains In Progress with a bounded blocker.
+
+`software-development.implement.v1` remains available for an already prepared assignment
+workspace. It never accepts a free-form remote clone URL.
+
+On onboarding, Adrian introduces himself only to the manager in his current runtime identity; he
+does not post the introduction into the hiring conversation. If no manager is assigned, onboarding
+stays unacknowledged and sends no message until the reporting relationship is corrected.
+
+### Services
+
+- **Assigned implementation** — ticket → workspace → validated diff → PR → evidence → Done.
+- **Solo MVP delivery** — epic → 2–8 stories → up to 48 tasks → branch-per-task → Testing → QA → governed merge.
+- **Test-instance previews** — Dockerfile build + health check + local `Open application` link (port 8080, explicit grant only).
+- **Durable recovery** — planning checkpoints, workspace snapshots, and retry-without-replay after restarts.
+
+### What I don't do
+
+The assigned-work capability does not merge pull requests, deploy, publish releases, manage credentials, or infer
+authority from repository content. Those actions remain outside this capability unless a future,
+separately reviewed contract explicitly adds them.
+
+When a genuine implementation failure is technical rather than operational, the Developer opens
+one assignment-pinned support session with the team's Software Architect. The request contains
+sanitized diagnostics, attempted steps, failed validations, and one explicit question. Linked
+guidance is included in the next confined implementation attempt, after which the Developer may
+request a governed retry of the exact blocked stage. Credential, grant, platform, provider,
+repository-authorization, and availability failures follow operational escalation instead.
+
+### Activity
+
+- Ships small, coherent diffs that preserve public APIs and established patterns.
+- Runs focused tests first, then broader validation in proportion to risk — never claims a pass without a tool result.
+- Writes actionable blockers: failed step, first failing check, and next action, with credentials and paths redacted.
+
+## Why Microsoft Agent Framework Harness
+
+This agent uses `Microsoft.Agents.AI.Harness` 1.15.0 because software implementation is typically a
+long, tool-driven task. The harness supplies the function-invocation loop, bounded iterations,
+context compaction, per-service-call history, todo tracking, and OpenTelemetry integration.
+
+C-Sweet remains the security and durability boundary:
+
+- the chat client comes from `AgentRuntimeContext.CreateChatClient` and never from a provider key;
+- file access is rooted at the assignment directory with `FileSystemAgentFileStore`;
+- `LocalShellExecutor` is confined to that directory and uses an explicit unattended deny policy;
+- harness file memory, filesystem skill discovery, hosted web search, agent-mode interaction,
+  background agents, and broad automatic tool approval are disabled;
+- C-Sweet owns work leasing, retries, progress, cancellation, grants, and provider bindings.
+
+The shell policy is defense in depth. The non-root, read-only-root container, isolated writable
+volume, resource limits, egress gateway, repository connection grant, branch protection, and
+repository-scoped credential are the actual security boundary.
+
+Microsoft reference:
+[Agent harnesses](https://learn.microsoft.com/en-us/agent-framework/agents/harness?pivots=programming-language-csharp).
+
+## Configuration
+
+Each installation must select:
+
+- `llmProviderId`: an approved C-Sweet provider profile;
+- `llmModel`: a coding-capable model exposed by that profile;
+- `maxContextWindowTokens`: the selected model's context-window size, used for compaction;
+- `maxOutputTokens`: the selected model's maximum output size and compaction reserve;
+- `customInstructions` (optional): repository-independent style or delivery guidance that cannot
+  expand authority.
+
+The optional `computeWorkstreamId` and `computeTemplateId` fields are retained for compatibility with saved installation settings, including empty values. C-Sweet supplies current compute defaults through its broker; these settings do not grant infrastructure or network access.
+
+The manifest provides `agent.configuration.describe.v1`,
+`agent.configuration.update.v1`, `software-development.implement.v1`, and
+`work.execution.run.v1`, plus a settings form contribution. C-Sweet owns every automated
+stage transition; the agent returns only a structured outcome and evidence.
+
+## Required grants
+
+The installation requests:
+
+- `platform.llm.chat-stream.v1`;
+- `platform.team-roster.read.v1` for the assigned employee's bounded team roster only;
+- work-item-scoped `work.item.read` and `work.item.comment`;
+- work-item-scoped comment/orchestration reads, `communication.coordination.start-work.v1`, and
+  governed exact-stage retry for the bounded Architect support loop;
+- work-item-scoped `git.workspace.prepare.v2`, `git.workspace.refresh.v2`,
+  `git.workspace.inspect.v2`, `git.workspace.publish.v2`, and `git.workspace.cleanup.v2`.
+
+The durable orchestration attempt creates the least-privilege work-item grants. The repository connection and its
+credentials are separately granted to the exact installation. See [GRANTS.md](GRANTS.md).
+
+## Example request
+
+```json
+{
+  "repository": "/workspace/5ea770e9f5d048339852b8278124b8c2/1",
+  "baseBranch": "main",
+  "objective": "Add the approved behavior.",
+  "requirements": [
+    "Preserve the existing public API."
+  ],
+  "acceptanceCriteria": [
+    "Focused tests pass."
+  ],
+  "constraints": [
+    "Do not merge the pull request."
+  ]
+}
+```
+
+For assignment events the harness also writes `.csweet/outcome.json`. C-Sweet removes this
+control file before inspecting and publishing the repository diff.
+
+## Build and test
+
+Requirements: .NET 10 and access to the public NuGet packages pinned by the projects.
 
 ```powershell
-dotnet test
+dotnet restore CSweet.Agent.Engineer.VideoGame.slnx
+dotnet test CSweet.Agent.Engineer.VideoGame.slnx --no-restore
 dotnet run --project src/CSweet.Agent.Engineer.VideoGame -- --self-test
 ```
 
-The tests run entirely in memory and require no C-Sweet instance or credentials.
+The tests require no C-Sweet instance, repository credential, GitHub account, or network access
+after restore.
 
 ## Install
 
 Keep `csweet-plugin.json` at the repository root. Import a reviewed GitHub commit in C-Sweet, or
 clone this repository as an immediate child of C-Sweet's configured local agent catalog. Review
-the exact manifest, grants, activation mode, and source before approving installation.
+the complete manifest, especially its model and repository grants, before approving installation.
 
-Built with `CSweet.Agent.SDK` 3.65.0 and the bundled video-game extension source.
+Built with `CSweet.Agent.SDK` 3.65.0 and `CSweet.WorkManagement.Contracts` 3.24.0.
 
+## Project status
 
-## Extension ownership and isolated builds
-
-Game-specific payload helpers and decision logic live in the bundled `extensions/video-game` source snapshot under the publisher-owned `CrosswiredStudios.VideoGame` namespace. They are compiled into this agent, not published as C-Sweet platform contracts. The snapshot has versioned SHA-256 provenance and needs no sibling checkout or domain NuGet feed. C-Sweet handles generic coordination envelopes and profile metadata; agent permissions and existing wire type IDs remain unchanged.
-
-## Brokered code delivery (2.3.0)
-
-Game engineering execution now uses the platform-provided ticket workspace and coding harness to edit files and run validation. The ticket must already have an authoritative development brief and repository binding. Execution requests the software-development-polyglot-v1 environment, read/write workspace access, and work-item-scoped Git prepare, inspect, publish and cleanup capabilities. The one-hour execution budget replaces the documentation-only timeout. The SDK pin is 3.40.0; no shared SDK changes are required.
-
-Successful execution requires changed files, successful validation results, actual reviewable workspace changes, and platform publication evidence. Pull-request delivery requires a returned PR URL. The published outcome is persisted per stage, attempt and assignment revision for duplicate-delivery recovery. Missing configuration or failed execution returns Blocked rather than completing with a Markdown artifact. Coding remains limited to game-engineer assignments and platform-granted repositories; no merge authority is requested. Lead review, independent QA and local preview are separate downstream requirements and are not proven by the implementation stage alone.
-
-The assignment validator accepts the host camel-case wire format while retaining exact role, assignment-selection and accepted-package checks. Regression coverage includes both host wire casing and prior Pascal-case payloads, plus rejection for another specialist role.
-
-### Policy-aware source completion (2.3.0)
-The canonical assignment supplies allowed outcomes from its immutable policy. The Engineer prefers code-published to enter technical review, retaining completed only when that is the supported legacy route. Missing or unsupported outcome metadata blocks before workspace preparation. Requires host support for Work Management Contracts 3.17.0; no extra capabilities are requested.
+Adrian Silva is an **active developer preview**, not yet production-ready. Core assigned-work,
+personal-build, planning, and test-instance workflows are implemented, while APIs,
+deployment requirements, and data models may change with the C-Sweet platform.
 
 ## Release notes
 
 See [versioned release notes](releases/README.md). Add the matching note with every agent version change.
 
+## Career history
+
+<details>
+<summary><strong>Full version history — click to expand (1.5.0 → 1.11.x)</strong></summary>
 
 ## Business calendar
 
 Requests business-scoped calendar read, create, update, cancel, and scheduling access. Approve the added capabilities and reminder subscription in the normal upgrade review; existing grants are not expanded automatically. Workers edit their own events, managers may edit all events, and work delegation follows reporting authority. Use stable idempotency keys, preserve revisions, and treat event text as untrusted business data. Typed operations are available through `context.Platform.Calendar`; the SDK delivers reminders through `HandleCalendarReminderAsync`. Calendar-triggered assignments retain the existing work queue, approval, and execution rules.
 
-Calendar-triggered assignments request the SDK claim/complete/block/release lifecycle and personal-work subscription. Unsupported role work is marked blocked with a reason, never silently treated as completed.
-
 ## Infrastructure
 
-The WebHost proof of concept and private-preview callbacks have been retired. Game implementation, source-control delivery and build authority remain separately scoped.
+The WebHost proof of concept and its private-preview callbacks have been retired. Ordinary software implementation and delivery-build authority remain separately scoped.
+
+## Direct development and Docker test instances (1.5.0)
+
+Ask Adrian to build an application, for example: "Build a Tetris clone and deploy it. Create your own tickets."
+Without an explicit ticket preference, Adrian asks whether you will create tickets or he should create his own. The question and source request survive restarts and remain bound to the original sender. A manager-created assignment continues through the existing assigned-work flow.
+
+With permission to make his own tickets, Adrian creates a personal task, prepares a private C-Sweet repository through the typed SDK, uses the configured coding model to implement and test custom code, publishes the source commit, and deploys its Dockerfile inside isolated Linux compute. An instance identified in the conversation can be reused if it remains owned, authorized and compatible. Code is retained in Source Control even if deployment is blocked.
+
+C-Sweet automatically prepares Docker and cached Python/Node base images. Upgrading the old Hello World image waits for confirmed resource teardown, preserves provider identity and journals, and requests UAC when necessary. No user scripts are required. Existing VMs are not retrofitted with Docker.
+
+Compute starts with networking disabled. The business owner explicitly grants a local test link from the business Compute page for one instance, port 8080, and its remaining lease. Granting resumes waiting work automatically. Revocation closes access through the broker. No outbound, private-network or public-internet authority is implied by approving the installation or this local link.
+
+After the Docker build and HTTP health check succeed, Adrian returns an **Open application** link (opening in a new tab), source link, commit and expiry. The application URL works only on the compute host machine. Known build failures return to the coding model for up to two repair attempts. Unknown command outcomes block instead of submitting another potentially duplicate command.
+
+Current limits: one-hour ephemeral Linux VM, cached `csweet/python:3.12` and `csweet/node:22` bases, 16 MiB source bundle, 30 seconds per guest command and 8 KiB command output. Guest outbound internet, arbitrary dependency downloads, public deployment and long builds are not supported by this local provider yet. Required unavailable dependencies are reported as blockers.
+
+The chat and personal-work callbacks use `context.Platform`, including SDK 3.65.0's `Git.PreparePersonalAsync`. Added declarations are `source-control.personal-work.prepare.v1`, `platform.agent-operating-state.read.v1`, `platform.agent-operating-state.write.v1` and `platform.user-input.request.v1`. Repository policy, live personal-task claim, installation, owner and team permissions are checked by Core. These declarations do not grant arbitrary repository creation or production deployment authority.
+
+Compute events are wake hints; the SDK claims the owning personal task before advancing it, and all operations re-read authorized state. A five-minute scheduled recovery deadline covers missed notifications. Work displays its current stage or blocking reason while the model or compute is idle.
+
+## Workspace transfer recovery (1.5.0)
+
+Uses SDK 3.65.0 and the added `git.workspace.sync.v1` declaration. The SDK downloads the authorized Core snapshot into the isolated runtime's writable temporary workspace before coding and uploads edited source before publication. It never mounts a host path or exposes Git credentials. Existing local edits survive repeated calls; a replacement runtime restores the latest uploaded snapshot. A requeued 1.4.0 task automatically replaces its old broker-only workspace path without creating another repository.
+
+Review the added workspace-sync declaration during the normal update. Source transfer currently supports 512 KiB compressed snapshots, 16 MiB content and 4,096 files; local `.csweet` control files are omitted. Application code must fit these bounds. Network grants and Docker compute limits remain separate.
+
+Temporary LLM provider outages retain the development task and schedule a review after five minutes. Once the provider is available, the next review retries coding in the existing workspace. Configuration errors and denied grants still require correction.
+
+The unattended harness authorizes reads and writes only in its assigned file store. It continues incomplete coding responses for up to six turns and reports unsupported approval pauses explicitly. `RunImplementationAsync` recognizes a final response containing only reasoning with tool-call syntax: it checkpoints retained files, reports `model.tool_protocol` as an operational provider-formatting problem, and stops continuation. It never executes reasoning text as a tool call. Correct the provider reasoning/tool-call parser or select a compatible model, then retry the blocked ticket. If a test instance expires before deployment has an unresolved command, Adrian retains the source commit and requests a replacement through the normal compute grant checks after teardown is confirmed. The Maximum compute replacements setting bounds attempts per task (default 3, zero disables replacement), including already saved replacement attempts. Failed and destroyed environments recover through the same path; unresolved commands are retained and never replayed on another instance. Recovery refreshes platform placement defaults and preserves committed source and validation evidence. Network grants are never copied to the replacement.
+
+## Solo MVP planning
+
+When a human asks Adrian to create his own tickets for an unplanned application, he first creates an MVP epic with 2–8 testable stories and 2–8 scoped tasks per story (maximum 48 tasks). The full backlog is saved before coding. Each task has acceptance criteria; integration validation immediately precedes the final deployment task.
+
+Adrian runs one task per durable callback, saves its repository snapshot and validation evidence, then continues with the next task. Stories roll up progress; failures block the active task, story, and epic. Requeue the epic to resume the retained plan. Existing assigned-work planning and deployments already in progress remain supported. Networking still requires a separate explicit grant.
+
+The new manifest requests work.personal-plan.create.v1 and work.personal-plan.report-task.v1. These operate only under the owning personal-work claim and scoped grants. Deploying this release requires SDK 3.65.0, WorkManagement.Contracts 3.22.0, and the corresponding C-Sweet planning broker update.
+
+Compute lifetime and repair settings: `computeLifetimeSeconds` defaults to 0 (until explicitly released); positive seconds request a timed lease. This requires the updated C-Sweet broker/provider and compatible compute grants. Existing signed leases retain their original expiry. Network grants remain explicit and instance-specific. `maximumDeploymentRepairs` and `maximumPlanRepairs` default to 2. `deploymentDiagnosticCharacters` defaults to 6000; Docker build logs are retained in the compute work directory and the error tail is returned for repair.
+
+SDK 3.65.0 and WorkManagement Contracts 3.24.0 are the dependencies for agent 1.11.0. An expired timed instance may receive one additional replacement after switching to `computeLifetimeSeconds: 0`, even if earlier failures exhausted the configured replacement budget. This is a durable, one-time policy transition: it does not reset counters, revive disabled retries (`maximumComputeReplacements: 0`), bypass teardown or grants, or renew on requeue/update. Core attention recovery reopens development blockers and their plan children after the agent update. `maximumDeploymentRepairs` is a budget for one reproducible Docker build or health-check failure; if a repair exposes a different failure, it begins its own configured budget. Identical repeated failures remain bounded. Owner-facing blocker messages summarize the first failed check in Markdown; raw test output and log paths remain in retained technical diagnostics.
+
+
+## Completion and interruption recovery (1.8.4)
+
+`GameEngineerAgent.ReadOutcomeAsync` accepts an explicit empty `changedFiles` array when
+retained work already satisfies the current ticket. A nonempty summary and fresh, named validation
+results are still required, and failed checks still block completion. Missing/null fields and malformed
+JSON produce specific completion-report errors. UTF-8 BOMs from file tools are accepted.
+
+`AdvanceDirectWorkAsync` saves accepted planned-task evidence in `DeploymentState.PlanCompletion`
+only after uploading its source snapshot. Publication uses the saved task identity and revision;
+the publication result is saved before reporting task completion. A retry resumes these platform
+steps without another coding-model run, even in a fresh runtime. Evidence from one task is never
+used to finish the next task. Existing 1.8.3 state remains readable.
+
+`GameEngineerHarness.RunImplementationAsync` checkpoints partial source through the existing
+authorized workspace upload after incomplete turns and non-cancellation model failures, before
+continuing or surfacing the error. Cancellation does not upload under an expired/revoked lease;
+an abrupt process loss can still lose edits since the last completed upload.
+
+The authoring runtime may lack Node. Python static checks do not execute the Node server, and
+Docker build/HTTP deployment does not automatically run Node tests. The agent must record these
+checks as unexecuted risks. This release does not install Node or change compute authority.
+
+Update Adrian to 1.8.4 using the normal agent update flow, then resume the blocked epic if the update
+has not already requeued it. Its saved source, plan, and completed children are reused.
+
+## Actionable blockers (1.8.5)
+
+`GameEngineerAgent.DevelopmentBlockerMessage` reports the failed step, current error or
+first failing check, and a recovery action. Platform exceptions retain their capability and
+failure code. `PlanValidationException` distinguishes exhausted task validation from deployment
+repair failures. Older deployment evidence is used only for deployment repair-limit reports.
+`BlockerExcerpt` bounds owner-facing evidence and redacts common credential forms, URLs, absolute
+host paths, and stack traces. No new authority or configuration is requested.
+
+C-Sweet's `AgentTicketFeedback.ReportedReason` preserves these multiline reports in comments;
+update the platform as well as Adrian to see evidence and next steps in ticket discussion.
+Existing comments are historical records and are not rewritten. Requeue a blocked task after
+addressing its reported cause; updating the agent alone does not repair an underlying failure.
+
+## Resumable planning (1.9.0)
+
+`GameEngineerAgent.PlanDevelopmentAsync` makes one outline request, then one task request
+per story. Each request uses at most 4,096 output tokens, or the configured lower
+`maxOutputTokens` value. The larger coding output setting does not enlarge planning responses.
+Each stage has at most three validation attempts; a correction regenerates only that stage.
+
+`DeploymentState.PlanningDraft` checkpoints the accepted outline and each populated story in
+the existing operating-state record, before the next model request. Cancellation or provider
+failure leaves earlier stages available on retry. A fully populated draft can become the
+immutable `PlanRequest` without another model call. Existing `PlanRequest` records remain
+authoritative and are never regenerated.
+
+The outline and partial task lists are internal planning state. The Work board receives the
+complete, validated epic/stories/tasks together before repository reservation and coding.
+Task generation remains sequential and bounded to 2–8 stories and 48 tasks; coding still runs
+one task per durable callback. The final integration Validation and Deployment sequence is
+unchanged. This adds no polling loop, subscription, grant, or configuration field.
+
+Update Adrian to 1.9.0 through the normal agent update flow. Unfinished planning resumes from
+saved stages; older versions have no partial draft to recover. Requeue a blocked epic if needed.
+Smaller requests reduce generation workload, but provider failures can still require a retry.
+
+## Review handoff and runtime validation (1.9.2)
+
+`GameEngineerAgent.ReviewDeliveryMessage` puts the actual review URL first and explains
+local access and expiry. The task's detailed coding outcome remains in `DeploymentState.Outcome`;
+it is no longer copied into chat as the delivery summary. `CompletedAsync` sends the saved
+handoff using its stable completion key before reporting the final deployment task complete.
+Publication still requires a completed provider operation, a current expiry, and a verified
+loopback URL. This is a review build: an HTTP response alone does not prove product acceptance.
+
+`DevelopmentBlockerChatMessage` provides a short first-person update with a board link, while
+`DevelopmentBlockerMessage` continues to populate the detailed blocker and ticket comments.
+
+`NodeDeploymentValidationScript` runs `npm --offline test` in cached `csweet/node:22` when the
+source snapshot contains `package.json`. It requires a nonempty test script, copies source into
+the temporary test container, disables network and image pulls, and retains bounded failure
+output for the existing repair flow. Tests run from the full source snapshot before the image
+build, even when the Dockerfile omits development files. Non-Node projects retain their existing
+validation path. Unit tests cannot by themselves prove UI completeness; integration tasks must
+exercise actual entry points and feature wiring, followed by human review of the running build.
+
+Verification: `ReviewDeliveryTests` covers URL-first formatting, publication failures, delivery
+ordering, restart recovery and preservation of technical evidence. Existing deployment recovery
+tests cover failed command outcomes and bounded repairs. Update the agent for future work;
+this release does not retroactively repair generated applications or rewrite historical messages.
+
+## Project continuity and planning status (1.11.0)
+
+`EvaluatePersonalTodoClaimAsync` only checks compute prerequisites. The SDK claims the root ticket
+and moves it to Doing before `PrepareDevelopmentPlanAsync` invokes the model. Planning checkpoints
+still survive cancellation and restart; the full backlog is saved before implementation starts.
+Repository preparation uses the saved epic title after planning, without a pre-claim reservation.
+
+`HandleDirectWorkMessageAsync` retains new requests as project intake records. Follow-up fixes select an authorized, actual project; personal epics and repository names are not project identities. Once assigned, the platform uses the project's repository binding, so changing an epic title does not create another repository. Existing prepared work retains its original binding during rollout.
+
+## Task delivery and merge choices
+
+Personal plans use a branch per task in the existing project repository. Implemented tasks enter Testing, go to the team's QA when available, and wait for a confirmed merge before completion. Managers can approve one exact task, all task merges in a story, or all task merges in an epic, or review first. Ask Adrian about the current setting or change it through normal dialogue. Story overrides take precedence; QA failures and conflicts still require repair. SDK 3.65.0 and the matching platform migration are required. Upgrade grants include task review, preference management, and durable review-change events.
+
+## Project prerequisite
+
+Declares the shared SDK requiresProject policy. Retains requests through typed project intake, offers authorized setup and membership links, and resumes on durable readiness events. Uses project-scoped compute and the project board for delivery; does not create projects, assign itself, or hire. Task review and scoped merge preferences remain in place.
+
+</details>
+
+---
+
+<div align="center">
+  <strong>You bring the requirements. Adrian ships the reviewable diff.</strong>
+  <br /><br />
+  <a href="#hire-adrian">Hire Adrian</a>
+  ·
+  <a href="https://github.com/CrosswiredStudios/CSweet.Agent.GameEngineer/issues">Report an issue</a>
+  ·
+  <a href="https://ko-fi.com/O7F226H4A2">Support C-Sweet on Ko-fi</a>
+</div>
+
+### Producer sprint estimation
+
+The developer accepts the Producer's existing `video-game.production.role-estimate-request.v1`
+board coordination protocol for `game-engineer` and `software-developer` assignments. Replies
+bind the request fingerprint, board, planning revision, digest and exact candidate item IDs.
+Initial estimates use the production specialist kit's documented criterion/dependency sizing
+policy; offered capacity is conditional on no competing allocation and available prerequisites.
+These proposals do not mark work Ready, approve QA, activate a sprint, or change assignments.
+Malformed, cross-board, foreign-role and uncorrelated requests remain blocked. No new grants
+or network access are required.
+
+Orchestrated repository publication selects the exact success transition declared by the host: `code-published` for game workflows that require technical review and QA, or `completed` for legacy software workflows. Unsupported policies block before implementation. Host-supplied `dependency-document.v1` evidence carries only the exact manager-accepted work product of a declared dependency. The developer checks its source, immutable revision, and content hash before including it as untrusted design evidence in the coding prompt; it gains no document browsing or editing permission.
+
+Assigned sprint tickets use the SDK's confined snapshot workspace, as personal work already does. Source is downloaded before the coding harness starts, checkpointed during execution, and uploaded before inspection/publication. A broker path is not assumed to exist inside the isolated runtime.
+
+## Assigned coding runtime (1.12.3)
+
+Assigned engineering stages implement and validate code in the authorized snapshot inside the isolated agent runtime. They do not request a separate deployment VM. Deployment flows still require ready compute; assigned publication still requires actual validation and the configured technical review, independent QA and merge stages.
+
+## Review-driven rework (1.12.4)
+
+Assigned coding consumes completed technical-review and QA rejection results from `WorkExecutionAssignmentV1.PriorOutcomes`, with exact commit evidence and bounded findings. The model must compare each finding with the current source and either fix it or provide evidence for a resolved/disputed finding. Prior findings do not waive acceptance criteria. A new attempt removes only its local previous `.csweet/outcome.json` before model execution and requires fresh validation evidence; source edits remain retained.
+
+## Rework that needs no code change (1.13.0)
+
+A rejected or failed review does not always mean the code is wrong. Sometimes every finding is already fixed in the candidate, or the remaining findings cannot be addressed in code at all, for example a measurement that needs a browser, device or network that no role has. Adrian now handles this the way a developer on a human team would:
+
+- Each review finding reaches the coding model with a stable ID (`R1.2`). The completion report answers every ID with `fixed`, `already-resolved`, `disputed` or `needs-decision`, plus evidence.
+- If the workspace is unchanged and every finding is `already-resolved` or `disputed`, Adrian **resubmits the unchanged candidate**. He reuses the exact prior publication for the workspace base commit from this item execution, posts the per-finding evidence as a ticket comment, and returns `code-published` so technical review and QA re-examine the same SHA.
+- If any finding is `needs-decision` or unanswered, Adrian returns **Blocked with a decision request**. The request names the unchanged candidate, the decisions needed, what is already addressed, and the options (amend or defer criteria, provide tooling, or give code direction). The outcome carries the diagnostic `decision-required:v1`, and no architecture support is requested because nothing needs debugging.
+- If a finding is reported as `fixed` but nothing changed, the report is inconsistent and the stage blocks as before.
+- With no review to answer, for example in a replacement sprint after an owner scope amendment, unchanged work resubmits the retained candidate when it is known. Adrian remembers each publication in operating state and falls back to his own earlier publication evidence comments. Without a known candidate, he asks the manager to confirm the ticket is already satisfied or to re-scope it.
+
+- If review rejects the same resubmitted build a second time, Adrian stops resubmitting and asks for a tie-break. When the manager retries the stage with a direction, Adrian follows that direction. Retry directions arrive as `manager-direction` assignment evidence.
+- For genuine technical failures Adrian asks the team's technical lead for guidance: the Architect, or the Technical Director on game teams.
+
+Decision summaries are bounded to fit the platform's block reason. There are no new capabilities, grants or network access.
+
+## Ticket discussion (1.15.0)
+
+Adds ticket thread reads and directed response requests to the confined coding harness. Questions pause and checkpoint the attempt; replay recovers the retained request. The Producer can resume after the exact teammate replies.
+
+The agent subscribes to `com.csweet.work.item.discussion.changed.v1` and uses grant-governed item,
+comment, board and orchestration reads. Ask with `@Full Name: your question` on a team ticket.
+Replies use `discussion.reply` and an exact comment/revision correlation; duplicates and stale
+requests are ignored. Informational notifications do not trigger automatic conversation loops.
+Bounded attention recovery scans the current assigned project for missed requests. The host retains
+undelivered notifications while offline; install the matching C-Sweet host update and approve new
+manifest permissions. Comments provide context, never execution authority or review approval.
 
 ## Hierarchical delivery
 
@@ -70,6 +469,14 @@ Model token settings default to 256,000 context-window tokens (maxContextWindowT
 ## Certified release build-readiness
 
 SDK 3.65.0 allows the Producer to assign build-readiness to an updated Technical Director or Developer when no Build Release Engineer is available. The assigned agent must advertise `work.execution.build-readiness.v1` and V2 execution. `DeliveryBuildReadiness.ExecuteAsync` requests the configured certified provider build for every exact release repository candidate, returns durable pending build identities, and verifies successful output provenance. It grants no deployment, publication, or independent product approval authority. Existing project, repository and build grants remain required.
+
+## Project compute test delivery
+
+- Discover and include current approved project compute options in assigned implementation guidance.
+- Supply runnable browser test packaging (a compatible Dockerfile or dependency-free static index.html) without requiring a certified toolchain.
+- Consume Agent SDK 3.65.0 and WorkManagement.Contracts 3.26.0.
+
+Current compute review links are local to the provider machine. Public hosting remains a separate capability. Pending setup and local-link approval preserve durable progress; unknown command outcomes are not automatically repeated.
 
 ## Delegation and tracking
 

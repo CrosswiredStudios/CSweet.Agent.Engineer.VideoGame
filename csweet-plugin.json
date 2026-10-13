@@ -4,6 +4,7 @@
   "kind": "agent",
   "rolePolicy": {
     "profile": "individual-contributor.v1",
+    "requiresProject": true,
     "declaredRoleKeys": [
       "game-engineer",
       "software-developer"
@@ -19,7 +20,7 @@
   },
   "id": "com.csweet.video-game-engineer",
   "name": "Adrian Silva",
-  "version": "3.3.1",
+  "version": "3.4.0",
   "publisher": {
     "id": "com.csweet",
     "name": "C-Sweet"
@@ -29,7 +30,6 @@
     "projectPath": "src/CSweet.Agent.Engineer.VideoGame/CSweet.Agent.Engineer.VideoGame.csproj",
     "targetFramework": "net10.0",
     "defaultActivationMode": "OnDemand",
-    "defaultTickFrequencySeconds": 300,
     "supportsMultipleInstallations": true,
     "maximumConcurrentJobs": 1,
     "environmentProfile": "software-development-polyglot-v1",
@@ -494,43 +494,33 @@
     },
     {
       "name": "work.execution.run.v1",
-      "description": "Implements tested gameplay and runtime code, integrations, source-control delivery, and build fixes.",
+      "description": "Execute one pinned board workflow stage and return a structured outcome without mutating the card transition.",
       "inputSchema": {
         "type": "object",
         "required": [
-          "sprintExecutionId",
-          "itemExecutionId",
           "stageExecutionId",
           "attemptId",
-          "organizationId",
           "boardId",
-          "sprintId",
           "itemId",
-          "assignmentRevision",
-          "boardKey",
-          "itemIdentifier",
-          "policyRevisionId",
           "stageKey",
-          "traversal",
-          "attempt",
-          "deadline",
           "instructions",
           "item",
-          "input",
-          "priorOutcomes",
-          "evidence"
+          "input"
         ],
-        "properties": {},
         "additionalProperties": true
       },
       "outputSchema": {
         "type": "object",
-        "properties": {
-          "message": {
-            "type": "string"
-          }
-        },
-        "required": [],
+        "required": [
+          "stageExecutionId",
+          "attemptId",
+          "disposition",
+          "outcomeCode",
+          "summary",
+          "output",
+          "evidence",
+          "diagnostics"
+        ],
         "additionalProperties": true
       },
       "executionTimeoutSeconds": 3600,
@@ -538,15 +528,253 @@
       "riskClass": "elevated"
     },
     {
-      "name": "agent.configuration.describe.v1",
-      "description": "Describe specialist configuration.",
+      "name": "software-development.implement.v1",
+      "description": "Implement an approved software change in a granted repository and return a reviewable, evidence-backed report.",
       "inputSchema": {
         "type": "object",
-        "additionalProperties": true
+        "additionalProperties": false,
+        "required": [
+          "repository",
+          "objective",
+          "requirements",
+          "acceptanceCriteria"
+        ],
+        "properties": {
+          "repository": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "objective": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8000
+          },
+          "requirements": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            }
+          },
+          "acceptanceCriteria": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            }
+          },
+          "baseBranch": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 255
+          },
+          "constraints": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "maxItems": 100,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            }
+          }
+        }
       },
       "outputSchema": {
         "type": "object",
-        "additionalProperties": true
+        "additionalProperties": false,
+        "required": [
+          "workId",
+          "report",
+          "completedAt"
+        ],
+        "properties": {
+          "workId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "report": {
+            "type": "string",
+            "minLength": 1
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "executionTimeoutSeconds": 900,
+      "idempotency": "work-item",
+      "riskClass": "elevated"
+    },
+    {
+      "name": "agent.configuration.describe.v1",
+      "description": "Describe Video Game Engineer configuration.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "agentId",
+          "agentVersion",
+          "schemaVersion",
+          "fields",
+          "settings"
+        ],
+        "properties": {
+          "agentId": {
+            "type": "string"
+          },
+          "agentVersion": {
+            "type": "string"
+          },
+          "schemaVersion": {
+            "type": "string"
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "key",
+                "label",
+                "type",
+                "required"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "required": {
+                  "type": "boolean"
+                },
+                "description": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "placeholder": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "options": {
+                  "type": [
+                    "array",
+                    "null"
+                  ],
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "value",
+                      "label"
+                    ],
+                    "properties": {
+                      "value": {
+                        "type": "string"
+                      },
+                      "label": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "minimum": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "maximum": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "step": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "dependsOnFieldKey": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          },
+          "settings": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "llmProviderId": {
+                "type": "string"
+              },
+              "llmModel": {
+                "type": "string"
+              },
+              "maxContextWindowTokens": {
+                "type": "number"
+              },
+              "maxOutputTokens": {
+                "type": "number"
+              },
+              "maximumComputeReplacements": {
+                "type": "number"
+              },
+              "customInstructions": {
+                "type": "string"
+              },
+              "computeLifetimeSeconds": {
+                "type": "integer",
+                "minimum": 0,
+                "default": 0
+              },
+              "maximumDeploymentRepairs": {
+                "type": "integer",
+                "minimum": 0,
+                "default": 2
+              },
+              "maximumPlanRepairs": {
+                "type": "integer",
+                "minimum": 0,
+                "default": 2
+              },
+              "deploymentDiagnosticCharacters": {
+                "type": "integer",
+                "minimum": 1,
+                "default": 6000
+              }
+            }
+          }
+        }
       },
       "executionTimeoutSeconds": 30,
       "idempotency": "none",
@@ -554,14 +782,124 @@
     },
     {
       "name": "agent.configuration.update.v1",
-      "description": "Update specialist configuration.",
+      "description": "Update Video Game Engineer configuration.",
       "inputSchema": {
         "type": "object",
-        "additionalProperties": true
+        "additionalProperties": false,
+        "required": [
+          "settings"
+        ],
+        "properties": {
+          "settings": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "llmProviderId": {
+                "type": "string"
+              },
+              "llmModel": {
+                "type": "string"
+              },
+              "maxContextWindowTokens": {
+                "type": "number",
+                "minimum": 1
+              },
+              "maxOutputTokens": {
+                "type": "number",
+                "minimum": 1
+              },
+              "maximumComputeReplacements": {
+                "type": "number"
+              },
+              "customInstructions": {
+                "type": "string"
+              },
+              "computeLifetimeSeconds": {
+                "type": "integer",
+                "minimum": 0,
+                "default": 0
+              },
+              "maximumDeploymentRepairs": {
+                "type": "integer",
+                "minimum": 0,
+                "default": 2
+              },
+              "maximumPlanRepairs": {
+                "type": "integer",
+                "minimum": 0,
+                "default": 2
+              },
+              "deploymentDiagnosticCharacters": {
+                "type": "integer",
+                "minimum": 1,
+                "default": 6000
+              }
+            }
+          }
+        }
       },
       "outputSchema": {
         "type": "object",
-        "additionalProperties": true
+        "additionalProperties": false,
+        "required": [
+          "succeeded",
+          "settings"
+        ],
+        "properties": {
+          "succeeded": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "settings": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "llmProviderId": {
+                "type": "string"
+              },
+              "llmModel": {
+                "type": "string"
+              },
+              "maxContextWindowTokens": {
+                "type": "number"
+              },
+              "maxOutputTokens": {
+                "type": "number"
+              },
+              "maximumComputeReplacements": {
+                "type": "number"
+              },
+              "customInstructions": {
+                "type": "string"
+              },
+              "computeLifetimeSeconds": {
+                "type": "integer",
+                "minimum": 0,
+                "default": 0
+              },
+              "maximumDeploymentRepairs": {
+                "type": "integer",
+                "minimum": 0,
+                "default": 2
+              },
+              "maximumPlanRepairs": {
+                "type": "integer",
+                "minimum": 0,
+                "default": 2
+              },
+              "deploymentDiagnosticCharacters": {
+                "type": "integer",
+                "minimum": 1,
+                "default": 6000
+              }
+            }
+          }
+        }
       },
       "executionTimeoutSeconds": 30,
       "idempotency": "work-item",
@@ -576,24 +914,63 @@
       "modelVisible": false
     },
     {
-      "name": "work.personal-todo.claim.v1",
+      "name": "platform.artifact.submit.v1",
       "scope": "organization",
-      "purpose": "SDK lifecycle for calendar-triggered personal assignments; existing execution restrictions remain."
+      "purpose": "Deliver or independently review the exact assigned task revision under current board grants.",
+      "modelVisible": false
     },
     {
-      "name": "work.personal-todo.complete.v1",
+      "name": "platform.artifact.create.v1",
       "scope": "organization",
-      "purpose": "SDK lifecycle for calendar-triggered personal assignments; existing execution restrictions remain."
+      "purpose": "Deliver or independently review the exact assigned task revision under current board grants.",
+      "modelVisible": false
     },
     {
-      "name": "work.personal-todo.block.v1",
+      "name": "platform.artifact.read.v1",
       "scope": "organization",
-      "purpose": "SDK lifecycle for calendar-triggered personal assignments; existing execution restrictions remain."
+      "purpose": "Deliver or independently review the exact assigned task revision under current board grants.",
+      "modelVisible": false
     },
     {
-      "name": "work.personal-todo.release.v1",
+      "name": "work.board.read",
+      "scope": "team",
+      "purpose": "Read current ticket context to answer directed discussion and recover missed notifications.",
+      "modelVisible": false
+    },
+    {
+      "name": "work.project-intake.retain.v1",
       "scope": "organization",
-      "purpose": "SDK lifecycle for calendar-triggered personal assignments; existing execution restrictions remain."
+      "purpose": "Retain requests and coordinate authorized project setup without granting creation or assignment authority."
+    },
+    {
+      "name": "work.project-intake.read.v1",
+      "scope": "organization",
+      "purpose": "Retain requests and coordinate authorized project setup without granting creation or assignment authority."
+    },
+    {
+      "name": "work.project-intake.list.v1",
+      "scope": "organization",
+      "purpose": "Retain requests and coordinate authorized project setup without granting creation or assignment authority."
+    },
+    {
+      "name": "work.project-intake.discover.v1",
+      "scope": "organization",
+      "purpose": "Retain requests and coordinate authorized project setup without granting creation or assignment authority."
+    },
+    {
+      "name": "work.project-intake.choose.v1",
+      "scope": "organization",
+      "purpose": "Retain requests and coordinate authorized project setup without granting creation or assignment authority."
+    },
+    {
+      "name": "work.project-intake.start.v1",
+      "scope": "organization",
+      "purpose": "Retain requests and coordinate authorized project setup without granting creation or assignment authority."
+    },
+    {
+      "name": "work.project-intake.manager-request.v1",
+      "scope": "organization",
+      "purpose": "Retain requests and coordinate authorized project setup without granting creation or assignment authority."
     },
     {
       "name": "work.calendar.read.v1",
@@ -621,84 +998,132 @@
       "purpose": "Operate the business calendar within event ownership and reporting authority."
     },
     {
+      "name": "work.personal-todo.read.v1",
+      "scope": "organization",
+      "purpose": "Read resource-scoped personal queues"
+    },
+    {
+      "name": "work.personal-todo.add.v1",
+      "scope": "organization",
+      "purpose": "Add self or direct-report personal work"
+    },
+    {
+      "name": "work.personal-todo.reorder.v1",
+      "scope": "organization",
+      "purpose": "Reorder directly managed personal work"
+    },
+    {
+      "name": "work.personal-todo.requeue.v1",
+      "scope": "organization",
+      "purpose": "Requeue blocked personal work"
+    },
+    {
+      "name": "work.personal-todo.claim.v1",
+      "scope": "organization",
+      "purpose": "SDK-managed atomic personal work claims"
+    },
+    {
+      "name": "work.personal-todo.complete.v1",
+      "scope": "organization",
+      "purpose": "SDK-managed personal work completion"
+    },
+    {
+      "name": "work.personal-todo.block.v1",
+      "scope": "organization",
+      "purpose": "SDK-managed durable personal work blocking"
+    },
+    {
+      "name": "work.personal-todo.release.v1",
+      "scope": "organization",
+      "purpose": "SDK-managed personal work release"
+    },
+    {
+      "name": "platform.team-roster.read.v1",
+      "scope": "team",
+      "purpose": "Read only this developer employee's approved teammates and team-specific roles"
+    },
+    {
       "name": "platform.llm.chat-stream.v1",
       "scope": "organization",
-      "purpose": "Produce grounded role-owned deliverables from exact project evidence."
+      "purpose": "Run the Microsoft Agent Framework harness with the installation's approved coding model"
     },
     {
       "name": "work.item.read",
-      "scope": "organization",
-      "purpose": "Read only the authoritative assigned board item."
+      "scope": "work-item",
+      "purpose": "Re-read the authoritative assigned development ticket"
     },
     {
       "name": "work.item.comment",
-      "scope": "organization",
-      "purpose": "Record progress, blockers, findings, and evidence on the authoritative item."
+      "scope": "work-item",
+      "purpose": "Attach bounded validation evidence or a sanitized blocker to the assigned ticket"
     },
     {
       "name": "work.item.comment.update.v1",
-      "scope": "organization",
-      "purpose": "Correct this agent's own comment on the authoritative item."
+      "scope": "work-item",
+      "purpose": "Correct this agent's own validation-evidence comment on the assigned ticket"
     },
     {
       "name": "work.item.comment.delete.v1",
-      "scope": "organization",
-      "purpose": "Retract this agent's own comment while its activity history is retained."
+      "scope": "work-item",
+      "purpose": "Retract this agent's own validation-evidence comment while its activity history is retained"
     },
     {
-      "name": "platform.artifact.read.v1",
-      "scope": "organization",
-      "purpose": "Read authorized exact document revisions and hashes."
+      "name": "work.item.comments.read",
+      "scope": "work-item",
+      "purpose": "Read Architect guidance linked to the exact assigned ticket"
     },
     {
-      "name": "platform.artifact.create.v1",
-      "scope": "organization",
-      "purpose": "Create the role-owned durable deliverable."
+      "name": "work.orchestration.read",
+      "scope": "work-item",
+      "purpose": "Read the exact assigned stage execution state"
     },
     {
-      "name": "platform.artifact.submit.v1",
-      "scope": "organization",
-      "purpose": "Submit the exact deliverable revision for accountable review."
+      "name": "work.orchestration.retry",
+      "scope": "work-item",
+      "purpose": "Request a governed retry after consuming linked Architect guidance",
+      "modelVisible": false
     },
     {
-      "name": "communication.coordination.read.v1",
+      "name": "communication.coordination.start-work.v1",
       "scope": "team",
-      "purpose": "Read planning and estimation coordination."
+      "purpose": "Request bounded technical support from the team Architect",
+      "modelVisible": false
     },
     {
       "name": "communication.coordination.respond.v1",
       "scope": "team",
-      "purpose": "Respond with role-owned planning, estimation, or review evidence."
+      "purpose": "Finalize work-item support after guidance and governed retry",
+      "modelVisible": false
     },
     {
-      "name": "platform.agent-operating-state.read.v1",
-      "scope": "organization",
-      "purpose": "Recover project/work-item state and duplicate-delivery outcomes after restart."
-    },
-    {
-      "name": "platform.agent-operating-state.write.v1",
-      "scope": "organization",
-      "purpose": "Persist revision-safe state isolated by Workstream and authoritative work item."
+      "name": "communication.coordination.read.v1",
+      "scope": "team",
+      "purpose": "Read only support sessions in which this Developer participates"
     },
     {
       "name": "git.workspace.prepare.v2",
       "scope": "work-item",
-      "purpose": "Execute and publish the exact assigned game implementation in its brokered workspace."
+      "purpose": "Clone or resume the ticket's installation-granted repository workspace"
+    },
+    {
+      "name": "git.workspace.refresh.v2",
+      "reason": "Refreshes the assigned credential-free workspace against its Core-authorized base.",
+      "required": true
     },
     {
       "name": "git.workspace.inspect.v2",
       "scope": "work-item",
-      "purpose": "Execute and publish the exact assigned game implementation in its brokered workspace."
+      "purpose": "Collect sanitized changed-file and commit metadata"
     },
     {
       "name": "git.workspace.publish.v2",
       "scope": "work-item",
-      "purpose": "Execute and publish the exact assigned game implementation in its brokered workspace."
+      "purpose": "Push only the deterministic ticket branch and create a configured pull request"
     },
     {
       "name": "git.workspace.cleanup.v2",
       "scope": "work-item",
-      "purpose": "Execute and publish the exact assigned game implementation in its brokered workspace."
+      "purpose": "Remove successful workspaces and retain failed workspaces for recovery"
     },
     {
       "reason": "Optional private product build, demo and testing under owner-approved scoped grants.",
@@ -707,6 +1132,162 @@
     {
       "reason": "Optional private product build, demo and testing under owner-approved scoped grants.",
       "name": "platform.build.read.v2"
+    },
+    {
+      "name": "compute.provision.v1",
+      "scope": "organization",
+      "purpose": "Create and report explicitly requested ephemeral Linux test instances under separate scoped compute and networking grants.",
+      "modelVisible": false
+    },
+    {
+      "name": "compute.read.v1",
+      "scope": "organization",
+      "purpose": "Create and report explicitly requested ephemeral Linux test instances under separate scoped compute and networking grants.",
+      "modelVisible": false
+    },
+    {
+      "name": "compute.list.v1",
+      "scope": "organization",
+      "purpose": "Create and report explicitly requested ephemeral Linux test instances under separate scoped compute and networking grants.",
+      "modelVisible": false
+    },
+    {
+      "name": "compute.execute.v1",
+      "scope": "organization",
+      "purpose": "Create and report explicitly requested ephemeral Linux test instances under separate scoped compute and networking grants.",
+      "modelVisible": false
+    },
+    {
+      "name": "compute.stop.v1",
+      "scope": "organization",
+      "purpose": "Create and report explicitly requested ephemeral Linux test instances under separate scoped compute and networking grants.",
+      "modelVisible": false
+    },
+    {
+      "name": "compute.destroy.v1",
+      "scope": "organization",
+      "purpose": "Create and report explicitly requested ephemeral Linux test instances under separate scoped compute and networking grants.",
+      "modelVisible": false
+    },
+    {
+      "name": "network.inbound.v1",
+      "scope": "organization",
+      "purpose": "Create and report explicitly requested ephemeral Linux test instances under separate scoped compute and networking grants.",
+      "modelVisible": false
+    },
+    {
+      "name": "network.publish-port.v1",
+      "scope": "organization",
+      "purpose": "Create and report explicitly requested ephemeral Linux test instances under separate scoped compute and networking grants.",
+      "modelVisible": false
+    },
+    {
+      "name": "work.personal-todo.defer.v1",
+      "scope": "organization",
+      "purpose": "Create and report explicitly requested ephemeral Linux test instances under separate scoped compute and networking grants.",
+      "modelVisible": false
+    },
+    {
+      "name": "communication.chat.read.v1",
+      "scope": "organization",
+      "purpose": "Create and report explicitly requested ephemeral Linux test instances under separate scoped compute and networking grants.",
+      "modelVisible": false
+    },
+    {
+      "name": "communication.message.send.v1",
+      "scope": "organization",
+      "purpose": "Create and report explicitly requested ephemeral Linux test instances under separate scoped compute and networking grants.",
+      "modelVisible": false
+    },
+    {
+      "name": "agent.onboarding.complete.v1",
+      "scope": "organization",
+      "purpose": "Acknowledge onboarding only after Daniel has introduced himself to his assigned manager.",
+      "modelVisible": false
+    },
+    {
+      "name": "communication.chat.create.v1",
+      "scope": "organization",
+      "purpose": "Create or reuse a direct chat with the assigned manager for onboarding and one compute blocker message per incident.",
+      "modelVisible": false
+    },
+    {
+      "name": "source-control.personal-work.reserve.v1",
+      "scope": "organization",
+      "purpose": "Reserve a concise private repository for an owned Ready development ticket without starting implementation.",
+      "modelVisible": false
+    },
+    {
+      "name": "source-control.personal-work.prepare.v1",
+      "scope": "organization",
+      "purpose": "Retain direct software requests, ask who creates tickets, and implement owned personal tickets in private C-Sweet repositories.",
+      "modelVisible": false
+    },
+    {
+      "name": "platform.agent-operating-state.read.v1",
+      "scope": "organization",
+      "purpose": "Retain direct software requests, ask who creates tickets, and implement owned personal tickets in private C-Sweet repositories.",
+      "modelVisible": false
+    },
+    {
+      "name": "platform.agent-operating-state.write.v1",
+      "scope": "organization",
+      "purpose": "Retain direct software requests, ask who creates tickets, and implement owned personal tickets in private C-Sweet repositories.",
+      "modelVisible": false
+    },
+    {
+      "name": "platform.user-input.request.v1",
+      "scope": "organization",
+      "purpose": "Retain direct software requests, ask who creates tickets, and implement owned personal tickets in private C-Sweet repositories.",
+      "modelVisible": false
+    },
+    {
+      "name": "git.workspace.sync.v1",
+      "scope": "work-item",
+      "purpose": "Transfer owned repository snapshots into and out of the isolated developer workspace.",
+      "modelVisible": false
+    },
+    {
+      "name": "work.personal-plan.create.v1",
+      "scope": "organization",
+      "purpose": "Plan owned direct requests as MVP epics, testable stories, and small tasks; report verified task progress.",
+      "modelVisible": false
+    },
+    {
+      "name": "work.personal-plan.report-task.v1",
+      "scope": "organization",
+      "purpose": "Plan owned direct requests as MVP epics, testable stories, and small tasks; report verified task progress.",
+      "modelVisible": false
+    },
+    {
+      "name": "source-control.task-review.submit.v1",
+      "scope": "work-item",
+      "purpose": "Participate in durable review of the exact task source revision"
+    },
+    {
+      "name": "source-control.task-review.read.v1",
+      "scope": "work-item",
+      "purpose": "Participate in durable review of the exact task source revision"
+    },
+    {
+      "name": "source-control.task-review.decide.v1",
+      "scope": "work-item",
+      "purpose": "Participate in durable review of the exact task source revision"
+    },
+    {
+      "name": "source-control.merge-preference.read.v1",
+      "scope": "work-item",
+      "purpose": "Read or update manager-authorized story and epic merge preferences"
+    },
+    {
+      "name": "source-control.merge-preference.change.v1",
+      "scope": "work-item",
+      "purpose": "Read or update manager-authorized story and epic merge preferences"
+    },
+    {
+      "name": "source-control.task-review.list.v1",
+      "scope": "work-item",
+      "purpose": "Recover assigned pending reviews after a missed wake event"
     },
     {
       "name": "work.delegation.create.v1",
@@ -779,34 +1360,23 @@
       "scope": "organization",
       "purpose": "Use shared SDK delegation, authenticated recipient resolution, canonical work and durable reporting within existing resource authority.",
       "modelVisible": false
-    },
-    {
-      "name": "communication.chat.read.v1",
-      "scope": "organization",
-      "purpose": "Use shared SDK delegation, authenticated recipient resolution, canonical work and durable reporting within existing resource authority.",
-      "modelVisible": false
-    },
-    {
-      "name": "work.personal-todo.read.v1",
-      "scope": "organization",
-      "purpose": "Use shared SDK delegation, authenticated recipient resolution, canonical work and durable reporting within existing resource authority.",
-      "modelVisible": false
-    },
-    {
-      "name": "work.personal-todo.add.v1",
-      "scope": "organization",
-      "purpose": "Use shared SDK delegation, authenticated recipient resolution, canonical work and durable reporting within existing resource authority.",
-      "modelVisible": false
     }
   ],
   "events": {
     "subscribes": [
+      "com.csweet.work.item.discussion.changed.v1",
+      "com.csweet.project-intake.changed.v1",
+      "com.csweet.agent.onboarded.v1",
       "com.csweet.calendar.reminder-due.v1",
       "com.csweet.work.personal-todo.available.v1",
+      "com.csweet.communication.message.mentioned.v1",
       "com.csweet.agent.coordination.turn-requested.v1",
+      "com.csweet.user.message.received.v1",
+      "com.csweet.compute.changed.v1",
+      "com.csweet.compute.available.v1",
+      "com.csweet.source-control.task-review.changed.v1",
       "com.csweet.work.delegation.received.v1",
       "com.csweet.work.tracking.changed.v1",
-      "com.csweet.user.message.received.v1",
       "com.csweet.agent.attention.review-due.v1"
     ]
   },
@@ -823,8 +1393,14 @@
       "type": "model",
       "label": "Model",
       "required": true,
-      "secret": false,
-      "dependsOnFieldKey": "llmProviderId"
+      "secret": false
+    },
+    {
+      "key": "customInstructions",
+      "type": "textarea",
+      "label": "Custom instructions",
+      "required": false,
+      "secret": false
     },
     {
       "key": "maxContextWindowTokens",
@@ -832,9 +1408,6 @@
       "label": "Maximum context-window tokens",
       "required": true,
       "secret": false,
-      "description": "Planning ceiling for Engineer model requests; set this no higher than the selected model's real context window.",
-      "minimum": 16000,
-      "step": 1000,
       "defaultValue": 256000
     },
     {
@@ -843,24 +1416,131 @@
       "label": "Maximum output tokens",
       "required": true,
       "secret": false,
-      "description": "Budget for each Engineer model response, including reasoning. Set this within the selected model and provider's supported limits.",
-      "minimum": 1000,
-      "step": 1000,
-      "defaultValue": 128000,
-      "lessThanFieldKey": "maxContextWindowTokens"
+      "defaultValue": 128000
+    },
+    {
+      "key": "maximumComputeReplacements",
+      "type": "number",
+      "label": "Maximum compute replacements",
+      "required": false,
+      "secret": false,
+      "defaultValue": 3
+    },
+    {
+      "key": "computeWorkstreamId",
+      "type": "text",
+      "label": "Test-instance workstream",
+      "required": false,
+      "secret": false
+    },
+    {
+      "key": "computeTemplateId",
+      "type": "text",
+      "label": "Linux test template",
+      "required": false,
+      "secret": false
+    },
+    {
+      "key": "computeLifetimeSeconds",
+      "type": "number",
+      "label": "Compute lifetime in seconds",
+      "required": false,
+      "secret": false,
+      "defaultValue": 0,
+      "description": "Zero retains requested compute until explicitly released. Positive values request a timed lease, subject to platform grants."
+    },
+    {
+      "key": "maximumDeploymentRepairs",
+      "type": "number",
+      "label": "Maximum deployment repairs per failure",
+      "required": false,
+      "secret": false,
+      "defaultValue": 2,
+      "description": "Maximum coding repair attempts for the same Docker build or health-check failure. A newly revealed failure begins its own configured budget. Zero disables repair."
+    },
+    {
+      "key": "maximumPlanRepairs",
+      "type": "number",
+      "label": "Maximum task validation repairs",
+      "required": false,
+      "secret": false,
+      "defaultValue": 2,
+      "description": "Maximum coding repair attempts for a planned task validation failure."
+    },
+    {
+      "key": "deploymentDiagnosticCharacters",
+      "type": "number",
+      "label": "Deployment diagnostic characters",
+      "required": false,
+      "secret": false,
+      "defaultValue": 6000,
+      "description": "Number of trailing diagnostic characters supplied to the repair model. The guest output remains within the broker transport limit."
     }
   ],
   "credentials": [],
   "webAccess": {
-    "mode": "None",
-    "rules": []
+    "mode": "Allowlist",
+    "rules": [
+      {
+        "scheme": "https",
+        "host": "api.nuget.org",
+        "port": 443,
+        "pathPrefix": "/",
+        "methods": [
+          "GET"
+        ],
+        "protocol": "http",
+        "purpose": "Restore approved public NuGet packages"
+      },
+      {
+        "scheme": "https",
+        "host": "registry.npmjs.org",
+        "port": 443,
+        "pathPrefix": "/",
+        "methods": [
+          "GET"
+        ],
+        "protocol": "http",
+        "purpose": "Restore approved public npm packages"
+      },
+      {
+        "scheme": "https",
+        "host": "pypi.org",
+        "port": 443,
+        "pathPrefix": "/",
+        "methods": [
+          "GET"
+        ],
+        "protocol": "http",
+        "purpose": "Resolve approved public Python packages"
+      },
+      {
+        "scheme": "https",
+        "host": "files.pythonhosted.org",
+        "port": 443,
+        "pathPrefix": "/",
+        "methods": [
+          "GET"
+        ],
+        "protocol": "http",
+        "purpose": "Download approved public Python packages"
+      }
+    ],
+    "purpose": "Restore dependencies through the C-Sweet egress gateway; repository hosts come from installation grants"
   },
-  "ui": [],
+  "ui": [
+    {
+      "kind": "form",
+      "id": "video-game-engineer-settings",
+      "title": "Video Game Engineer settings",
+      "capability": "agent.configuration.update.v1"
+    }
+  ],
   "catalog": {
     "imageUrl": "https://raw.githubusercontent.com/CrosswiredStudios/CSweet.Agent.Engineer.VideoGame/main/assets/branding/portrait-v1.jpg",
     "companyLogoUrl": "https://raw.githubusercontent.com/CrosswiredStudios/CSweet.Agent.Engineer.VideoGame/main/assets/branding/csweet-icon.svg",
     "accentColor": "#326A8E",
-    "summary": "Implements tested gameplay and runtime code, integrations, source-control delivery, and build fixes.",
+    "summary": "Implements approved game and software requirements with the same planning, tested delivery, and compute recovery as the Video Game Engineer.",
     "category": "Engineering",
     "role": {
       "key": "game-engineer",

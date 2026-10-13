@@ -1,0 +1,30 @@
+name: agent-ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Test standalone clone with published packages
+        run: dotnet test CSweet.Agent.Engineer.VideoGame.slnx -c Release -p:UseLocalCSweetAgentSdk=false -p:UseLocalCSweetWorkManagementContracts=false
+      - name: Verify manifest and configuration
+        run: dotnet run --project src/CSweet.Agent.Engineer.VideoGame -c Release --no-build -- --self-test
+      - name: Pack
+        run: dotnet pack src/CSweet.Agent.Engineer.VideoGame -c Release --no-build --no-restore -o .artifacts/packages
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent-packages
+          path: .artifacts/packages/*.nupkg
+          if-no-files-found: error
