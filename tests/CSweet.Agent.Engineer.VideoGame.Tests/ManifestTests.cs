@@ -16,11 +16,11 @@ public sealed class ManifestTests
         var agent = new GameEngineerAgent();
 
         Assert.Equal("com.csweet.video-game-engineer", agent.AgentId);
-        Assert.Equal("3.5.1", agent.Version);
+        Assert.Equal("4.0.0", agent.Version);
         Assert.Equal(agent.AgentId, manifest.Id);
         Assert.Equal(agent.Version, manifest.Version);
         Assert.Contains(GameEngineerProfile.PrimaryCapability, manifest.Capabilities);
-        Assert.Contains(WorkManagementCapabilityNames.ExecutionRunV1, manifest.Capabilities);
+        Assert.Contains(WorkManagementCapabilityNames.ExecutionRun, manifest.Capabilities);
         Assert.Contains(DeliveryBuildReadiness.ExecutionCapability, manifest.Capabilities);
         Assert.Contains(AgentConfigurationCapabilities.Describe, manifest.Capabilities);
         Assert.Contains(AgentConfigurationCapabilities.Update, manifest.Capabilities);

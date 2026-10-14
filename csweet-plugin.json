@@ -20,7 +20,7 @@
   },
   "id": "com.csweet.video-game-engineer",
   "name": "Adrian Silva",
-  "version": "3.5.1",
+  "version": "4.0.0",
   "publisher": {
     "id": "com.csweet",
     "name": "C-Sweet"
@@ -267,7 +267,7 @@
       "riskClass": "standard"
     },
     {
-      "name": "work.execution.run.v2",
+      "name": "work.execution.run",
       "description": "Execute the authoritative task or delivery-plan scope with exact revision evidence and independent QA.",
       "inputSchema": {
         "type": "object",
@@ -491,41 +491,6 @@
       "executionTimeoutSeconds": 3600,
       "idempotency": "work-item",
       "riskClass": "standard"
-    },
-    {
-      "name": "work.execution.run.v1",
-      "description": "Execute one pinned board workflow stage and return a structured outcome without mutating the card transition.",
-      "inputSchema": {
-        "type": "object",
-        "required": [
-          "stageExecutionId",
-          "attemptId",
-          "boardId",
-          "itemId",
-          "stageKey",
-          "instructions",
-          "item",
-          "input"
-        ],
-        "additionalProperties": true
-      },
-      "outputSchema": {
-        "type": "object",
-        "required": [
-          "stageExecutionId",
-          "attemptId",
-          "disposition",
-          "outcomeCode",
-          "summary",
-          "output",
-          "evidence",
-          "diagnostics"
-        ],
-        "additionalProperties": true
-      },
-      "executionTimeoutSeconds": 3600,
-      "idempotency": "work-item",
-      "riskClass": "elevated"
     },
     {
       "name": "software-development.implement.v1",
