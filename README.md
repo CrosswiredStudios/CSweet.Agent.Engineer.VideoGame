@@ -3,7 +3,7 @@
   <h1>Adrian Silva</h1>
   <p><strong>Video Game Engineer @ C-Sweet · Turning approved requirements into reviewable, tested software</strong></p>
   <p>
-    First-party C-Sweet protocol-v2 agent · <code>com.csweet.video-game-engineer</code> · v4.0.3
+    First-party C-Sweet protocol-v2 agent · <code>com.csweet.video-game-engineer</code> · v4.0.4
   </p>
   <p><strong>Help build this future.</strong> <a href="https://ko-fi.com/O7F226H4A2">Support C-Sweet's development on Ko-fi.</a></p>
   <p>
@@ -36,7 +36,7 @@
 First-party C-Sweet engineering agent that implements approved software requirements while keeping
 changes reviewable, tested, and aligned with the product plan.
 
-The package ID is `com.csweet.video-game-engineer`; this implementation is version `4.0.3`
+The package ID is `com.csweet.video-game-engineer`; this implementation is version `4.0.4`
 and uses C-Sweet manifest protocol v2.
 
 ### Experience
@@ -500,7 +500,7 @@ See `DevelopmentDiagnostics.FailedValidationSummary` and `MissingToolDecision` f
 
 Execution uses one `work.execution.run` capability and `WorkExecutionAssignment` from SDK/WorkManagement.Contracts 4.0.0. Task and aggregate scopes retain their distinct authority checks within that envelope. Upgrade the platform and executing agents together; no legacy execution adapter remains.
 
-Uses SDK 4.2.0 bounded exact-publication task technical review and repository source hygiene. Install the matching platform broker and trusted Git publisher before upgrading. Existing generated/dependency files require explicit source cleanup; build recipes generate deployable artifacts from pinned dependencies.
+Uses SDK 4.4.1 bounded exact-publication task technical review and repository source hygiene. Install the matching platform broker and trusted Git publisher before upgrading. Existing generated/dependency files require explicit source cleanup; build recipes generate deployable artifacts from pinned dependencies.
 
 ## Workspace progress
 
@@ -516,3 +516,7 @@ success. Reports contain no paths, command text, source content or shell output.
 The matching host/UI update raises the bounded progress budget and reads these protected progress records even when audit
 receipts omit work content. Running instances keep their loaded package until the
 next safe upgrade; the change does not interrupt an active assignment.
+
+## Runtime interruption and preservation
+
+Version 4.0.4 uses SDK 4.4.1 heartbeat transport recovery. "WorkspaceCheckpoint" saves completed source edits and commands before more model/tool work. Checkpoint failure cancels coding. Cancellation and revoked authority still stop uploads; recovery restores the latest completed snapshot, so a hard crash during a tool can still lose that tool's unfinished changes. Assigned and personal development use the same mechanism. These changes require upgrading the installed agent and matching host; existing runtimes retain their loaded code.
