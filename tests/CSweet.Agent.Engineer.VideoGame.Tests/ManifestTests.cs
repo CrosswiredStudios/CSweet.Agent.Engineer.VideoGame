@@ -16,7 +16,7 @@ public sealed class ManifestTests
         var agent = new GameEngineerAgent();
 
         Assert.Equal("com.csweet.video-game-engineer", agent.AgentId);
-        Assert.Equal("4.0.7", agent.Version);
+        Assert.Equal("4.1.0", agent.Version);
         Assert.Equal(agent.AgentId, manifest.Id);
         Assert.Equal(agent.Version, manifest.Version);
         Assert.Contains(GameEngineerProfile.PrimaryCapability, manifest.Capabilities);
@@ -104,7 +104,7 @@ public sealed class ManifestTests
         Assert.Empty(root.GetProperty("credentials").EnumerateArray());
         Assert.Equal(
             [TicketConversations.Discussion.Changed, ProjectIntakeCapabilities.Changed, AgentLifecycleEvents.Onboarded, "com.csweet.calendar.reminder-due.v1", PersonalTodoEvents.Available, CommunicationEvents.MessageMentioned,
-                AgentCoordinationEvents.TurnRequested, CommunicationEvents.MessageReceived, "com.csweet.compute.changed.v1", "com.csweet.compute.available.v1", TaskDeliveryCapabilities.Changed, DelegationCapabilities.Received, DelegationCapabilities.Changed, AgentAttentionEvents.ReviewDue],
+                AgentCoordinationEvents.TurnRequested, CommunicationEvents.MessageReceived, "com.csweet.compute.changed.v1", "com.csweet.compute.available.v1", TaskDeliveryCapabilities.Changed, DelegationCapabilities.Received, DelegationCapabilities.Changed, AgentAttentionEvents.ReviewDue, WorkloadResourceEvents.Changed],
             root.GetProperty("events").GetProperty("subscribes")
                 .EnumerateArray().Select(item => item.GetString()!).ToArray());
     }

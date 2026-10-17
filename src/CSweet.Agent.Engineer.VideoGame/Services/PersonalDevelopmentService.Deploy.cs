@@ -113,13 +113,18 @@ internal sealed partial class PersonalDevelopmentService
                 if (File.Exists(outcomePath)) File.Delete(outcomePath);
                 SoftwareDevelopmentOutcome outcome;
                 await ProgressAsync("Writing application code, Docker configuration, and tests.");
-                using var client = await _chatClients.CreateAsync(context, ct);
                 await using var shell = GameEngineerHarness.CreateShell(root);
+                var progress = new WorkspaceProgress(item.Id, context.ReportProgressAsync, Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance, workspacePath: root);
+                var sizing = new WorkspaceResourceSizing(workspace, 1, context, progress.Validations);
+                shell.BeforeCommand = sizing.BeforeCommandAsync;
+                await sizing.BeforeCommandAsync("build", ct);
+                using var client = await _chatClients.CreateAsync(context, ct);
                 var options = GameEngineerHarness.CreateOptions(context.Identity?.DisplayName ?? "Adrian Silva", root, shell,
                     _settings.GetString("customInstructions"),
                     _settings.GetInt32("maxContextWindowTokens", GameEngineerHarness.DefaultContextWindowTokens),
                     _settings.GetInt32("maxOutputTokens", GameEngineerHarness.DefaultOutputTokens));
-                var harness = client.AsHarnessAgent(options);
+                options.ChatOptions!.Tools = [progress.ShellTool(shell), sizing.Tool(shell)];
+                var harness = progress.Attach(client.AsHarnessAgent(options));
                 var session = await harness.CreateSessionAsync(ct);
                 try
                 {
@@ -157,6 +162,7 @@ Include README instructions and test coverage for the requested behavior. The pl
 
                     DevelopmentWorkspaceService.ValidateMetadataPath(root);
                     outcome = await ImplementationOutcomeReader.ReadAsync(root, ct);
+                    outcome = await progress.Validations.VerifyAsync(outcome, shell, root, ct);
                 }
                 catch (Exception error) when ((error is InvalidOperationException or JsonException) && planTask is not null)
                 {
