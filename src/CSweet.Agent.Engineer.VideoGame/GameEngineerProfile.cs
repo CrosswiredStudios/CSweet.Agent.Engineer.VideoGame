@@ -3,7 +3,7 @@ namespace CSweet.Agent.Engineer.VideoGame;
 public static class GameEngineerProfile
 {
     public const string AgentId = "com.csweet.video-game-engineer";
-    public const string Version = "4.1.0";
+    public const string Version = "4.1.1";
     public const string DisplayName = "Adrian Silva";
     public const string PrimaryCapability = "software-development.implement.v1";
     public const string LlmCapability = "platform.llm.chat-stream.v1";
