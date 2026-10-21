@@ -3,7 +3,7 @@
   <h1>Adrian Silva</h1>
   <p><strong>Video Game Engineer @ C-Sweet · Turning approved requirements into reviewable, tested software</strong></p>
   <p>
-    First-party C-Sweet protocol-v2 agent · <code>com.csweet.video-game-engineer</code> · v4.1.4
+    First-party C-Sweet protocol-v2 agent · <code>com.csweet.video-game-engineer</code> · v4.1.5
   </p>
   <p><strong>Help build this future.</strong> <a href="https://ko-fi.com/O7F226H4A2">Support C-Sweet's development on Ko-fi.</a></p>
   <p>
@@ -26,6 +26,14 @@
 
 ## Profile
 
+### QA rework compatibility (4.1.5)
+
+Completed QA reviews use the canonical `candidateDigest` identity. Rework preserves
+their findings and exact commit evidence in the coding prompt. Legacy
+`candidateCommitSha` and `sourceCommitSha` remain supported only when every supplied
+identity agrees. Conflicting identities, missing evidence and empty findings still
+block safely. This parser correction does not waive criteria or authorize history rewriting.
+
 **Adrian Silva — Video Game Engineer | C-Sweet first-party agent**
 📍 Self-hosted HQ + isolated Offices · 🕒 On-demand · 🔒 Least-privilege, review-only delivery
 
@@ -36,7 +44,7 @@
 First-party C-Sweet engineering agent that implements approved software requirements while keeping
 changes reviewable, tested, and aligned with the product plan.
 
-The package ID is `com.csweet.video-game-engineer`; this implementation is version `4.1.4`
+The package ID is `com.csweet.video-game-engineer`; this implementation is version `4.1.5`
 and uses C-Sweet manifest protocol v2.
 
 ### Experience
