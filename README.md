@@ -3,7 +3,7 @@
   <h1>Adrian Silva</h1>
   <p><strong>Video Game Engineer @ C-Sweet · Turning approved requirements into reviewable, tested software</strong></p>
   <p>
-    First-party C-Sweet protocol-v2 agent · <code>com.csweet.video-game-engineer</code> · v4.1.3
+    First-party C-Sweet protocol-v2 agent · <code>com.csweet.video-game-engineer</code> · v4.1.4
   </p>
   <p><strong>Help build this future.</strong> <a href="https://ko-fi.com/O7F226H4A2">Support C-Sweet's development on Ko-fi.</a></p>
   <p>
@@ -36,7 +36,7 @@
 First-party C-Sweet engineering agent that implements approved software requirements while keeping
 changes reviewable, tested, and aligned with the product plan.
 
-The package ID is `com.csweet.video-game-engineer`; this implementation is version `4.1.3`
+The package ID is `com.csweet.video-game-engineer`; this implementation is version `4.1.4`
 and uses C-Sweet manifest protocol v2.
 
 ### Experience
@@ -548,6 +548,12 @@ real HTTP recipe regression test.
 ## Validation evidence recovery
 
 Version 4.1.1 distinguishes quoted regex characters from shell operators and retains executed exit codes. Assigned tickets may correct failed completion checks in at most two additional passes, with source checkpoints retained. Personal plans keep their configured repair budget. Use assertion scripts for absence checks; pipelines and status masking do not establish a pass.
+
+## Conventional commits (4.1.4)
+
+Version 4.1.4 uses SDK 5.2.0 and emits bounded, single-line `feat(task): ...` subjects for assigned
+implementation, personal implementation and planned-task checkpoints. It does not rewrite existing
+commits or change retained publication keys. Software Developer 2.1.3 carries the same core fix.
 
 ## Workspace policy denial recovery (4.1.3)
 
