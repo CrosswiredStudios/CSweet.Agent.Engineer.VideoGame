@@ -3,7 +3,7 @@
   <h1>Adrian Silva</h1>
   <p><strong>Video Game Engineer @ C-Sweet · Turning approved requirements into reviewable, tested software</strong></p>
   <p>
-    First-party C-Sweet protocol-v2 agent · <code>com.csweet.video-game-engineer</code> · v4.1.7
+    First-party C-Sweet protocol-v2 agent · <code>com.csweet.video-game-engineer</code> · v4.1.8
   </p>
   <p><strong>Help build this future.</strong> <a href="https://ko-fi.com/O7F226H4A2">Support C-Sweet's development on Ko-fi.</a></p>
   <p>
@@ -26,7 +26,7 @@
 
 ## Profile
 
-### Focused execution (4.1.7)
+### Focused execution (4.1.8)
 
 Keep validation proportional to changed behavior and accepted criteria. Older tool results are compacted early while assignments, constraints, review findings and recent evidence remain intact. Validation repair uses a fresh conversation with retained files and real execution receipts. Optional browser packaging examples are available in the workspace when needed, instead of inflating every coding prompt. Required technical review and independent QA remain unchanged.
 
@@ -53,7 +53,7 @@ block safely. This parser correction does not waive criteria or authorize histor
 First-party C-Sweet engineering agent that implements approved software requirements while keeping
 changes reviewable, tested, and aligned with the product plan.
 
-The package ID is `com.csweet.video-game-engineer`; this implementation is version `4.1.7`
+The package ID is `com.csweet.video-game-engineer`; this implementation is version `4.1.8`
 and uses C-Sweet manifest protocol v2.
 
 ### Experience
@@ -575,3 +575,7 @@ commits or change retained publication keys. Software Developer 2.1.3 carries th
 ## Workspace policy denial recovery (4.1.3)
 
 Denied shell commands return `workspace.command.policy_denied` with safe recovery guidance to the model. They never launch a process, receive a fabricated exit code, or count as executed validation. Three consecutive denials stop implementation with an operational blocker and preserve source checkpoints; permitted work resets that count. Existing protected paths and grants remain unchanged. Missing browser/device measurements must be reported explicitly or referred for a ticket revision, never fabricated. Upgrade through the published release and Installed Agents flow.
+
+## Small-ticket execution and gateway recovery (4.1.8)
+
+The confined execute_workspace_commands tool runs up to eight ordered standalone commands in one model turn. Each command retains its own exit code and validation receipt, checkpoints source before the next command, and stops the batch at its first failure or policy denial. File tools omit the implicit UTF-8 BOM. Gateway interruptions get two fresh-session recovery attempts from retained files; idempotent checkpoint uploads also receive bounded transport retry. Exhaustion is a retryable runtime.transport result for assigned work, while permission, cancellation and acceptance boundaries remain enforced. Install this version through published releases and Installed Agents before retrying retained work.
