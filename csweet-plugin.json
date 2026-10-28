@@ -20,7 +20,7 @@
   },
   "id": "com.csweet.video-game-engineer",
   "name": "Adrian Silva",
-  "version": "4.1.8",
+  "version": "4.1.9",
   "publisher": {
     "id": "com.csweet",
     "name": "C-Sweet"
@@ -1191,13 +1191,13 @@
     {
       "name": "platform.agent-operating-state.read.v1",
       "scope": "organization",
-      "purpose": "Retain direct software requests, ask who creates tickets, and implement owned personal tickets in private C-Sweet repositories.",
+      "purpose": "Recover short execution plans and infrastructure handoffs for assigned and personal tickets, and retain direct software requests.",
       "modelVisible": false
     },
     {
       "name": "platform.agent-operating-state.write.v1",
       "scope": "organization",
-      "purpose": "Retain direct software requests, ask who creates tickets, and implement owned personal tickets in private C-Sweet repositories.",
+      "purpose": "Persist short execution plans and infrastructure handoffs for assigned and personal tickets, and retain direct software requests.",
       "modelVisible": false
     },
     {
