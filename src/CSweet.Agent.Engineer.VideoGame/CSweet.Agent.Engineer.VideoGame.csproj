@@ -1,7 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+<<<<<<< Updated upstream
     <Version>4.1.6</Version>
+=======
+    <Version>4.1.13</Version>
+>>>>>>> Stashed changes
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>

@@ -20,7 +20,11 @@
   },
   "id": "com.csweet.video-game-engineer",
   "name": "Adrian Silva",
+<<<<<<< Updated upstream
   "version": "4.1.6",
+=======
+  "version": "4.1.13",
+>>>>>>> Stashed changes
   "publisher": {
     "id": "com.csweet",
     "name": "C-Sweet"
