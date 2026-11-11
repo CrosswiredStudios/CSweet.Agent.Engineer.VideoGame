@@ -596,6 +596,12 @@ After two automatic review windows, PlannedVerification runs at most two existin
 
 Successful dependency restoration invalidates previous validation receipts even when source/lock bytes do not change. The next planned check runs against restored runtime inputs; missing-module failures and earlier passes are not reused as current proof.
 
+## Declared browser verification (4.2.0)
+
+- A ticket's planning declaration (`Verifications`, contracts 5.4.0) decides whether its candidate needs a browser receipt and a visible canvas. The criteria-text heuristics apply only to tickets planned before declarations existed.
+- The assignment prompt says what the declaration requires, including the exact receipt the reviewer and QA check.
+- A passing `check_browser_build` receipt is always bound to the published validations, and tool-call notation is never left behind as a failing validation.
+
 ## Sprint execution improvements (4.1.13)
 
 - Recover the exact MCP Internal Server Error through existing bounded, checkpoint-preserving transport recovery. Authority, validation and unrelated HTTP 500 failures remain failures.

@@ -213,9 +213,7 @@ internal sealed partial class AssignedDevelopmentService(
         var browser = new BrowserSmokeCheck.Session(workspacePath, progress, shell,
             token => context.Platform.Git.UploadCheckpointAsync(workspace, assignmentRevision, token,
                 resumeSummary: progress.Validations.Summary(workspacePath)),
-            canvasRequired: BrowserSmokeCheck.Required(item) &&
-                System.Text.RegularExpressions.Regex.IsMatch(string.Join("\n", item.Development!.AcceptanceCriteria),
-                    @"\b(Phaser|canvas)\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase));
+            canvasRequired: BrowserSmokeCheck.CanvasRequired(item));
         harnessOptions.ChatOptions.Tools.Add(browser.Tool());
         AIAgent harness = progress.Attach(chatClient.AsHarnessAgent(workflow.Configure(discussion.Attach(
             await CalendarHarness.ConfigureAsync(context, harnessOptions, cancellationToken)))));
@@ -236,7 +234,8 @@ internal sealed partial class AssignedDevelopmentService(
                     technicalGuidance, dependencyPlans, reviewFeedback, managerDirections, discussion.CurrentThread) +
                 "\nRetained execution summary (context only; revalidate current source before publication): " + JsonSerializer.Serialize(workspace.ResumeSummary) +
                 "\nCurrent trusted resource policy: " + JsonSerializer.Serialize(context.Resources) + ". Use request_workload_memory before a heavy command when evidence indicates a larger VM is needed.\n" +
-                "\n" + BrowserDeliveryRecipe.GuidanceReference,
+                "\n" + BrowserDeliveryRecipe.GuidanceReference +
+                "\n" + BrowserSmokeCheck.AssignmentNote(item),
                 workspacePath,
                 cancellationToken, token => context.Platform.Git.UploadCheckpointAsync(workspace, assignmentRevision, token,
                     resumeSummary: progress.Validations.Summary(workspacePath)),
@@ -265,7 +264,7 @@ internal sealed partial class AssignedDevelopmentService(
             if (discussion.Pending is { } waiting) throw new TicketResponseRequiredException(waiting);
             return await ReadCheckpointedOutcomeAsync(workspacePath,
                 ct => context.Platform.Git.UploadAsync(workspace, assignmentRevision, ct), token);
-        }, cancellationToken, BrowserSmokeCheck.Required(item) ? browser.RequireEvidence : null);
+        }, cancellationToken, candidateOutcome => browser.BindEvidence(candidateOutcome, BrowserSmokeCheck.Required(item)));
         await context.Platform.Git.UploadAsync(workspace, assignmentRevision, cancellationToken);
         if (outcome.Validations.Count == 0 ||
             outcome.Validations.Any(x => !x.Succeeded || x.ExitCode != 0))
