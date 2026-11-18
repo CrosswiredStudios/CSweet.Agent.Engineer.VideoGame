@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <Version>4.5.2</Version>
+    <Version>4.5.3</Version>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
@@ -12,6 +12,7 @@
     <PackageReference Include="Microsoft.Agents.AI.Tools.Shell" Version="1.15.0-preview.260722.1" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="browser-record.mjs" LogicalName="browser-record.mjs" />
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
     <Content Include="..\..\csweet-plugin.json" Link="csweet-plugin.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
