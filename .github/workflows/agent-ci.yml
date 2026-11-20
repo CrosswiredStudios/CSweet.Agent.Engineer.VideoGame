@@ -28,7 +28,11 @@ jobs:
       - name: Install pnpm for developer execution tests
         run: npm install --global pnpm@10.19.0
       - name: Test standalone clone with pinned packages
-        run: dotnet test CSweet.Agent.Engineer.VideoGame.slnx -c Release -p:UseLocalCSweetAgentSdk=false -p:UseLocalCSweetWorkManagementContracts=false
+        env:
+          CHROMIUM_PATH: /usr/bin/google-chrome
+        run: |
+          test -x "$CHROMIUM_PATH"
+          dotnet test CSweet.Agent.Engineer.VideoGame.slnx -c Release -p:UseLocalCSweetAgentSdk=false -p:UseLocalCSweetWorkManagementContracts=false
       - name: Verify manifest and configuration
         run: dotnet run --project src/CSweet.Agent.Engineer.VideoGame -c Release --no-build -- --self-test
       - name: Pack
