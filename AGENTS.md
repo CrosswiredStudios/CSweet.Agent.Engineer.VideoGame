@@ -6,7 +6,7 @@ This repository contains one standalone C-Sweet protocol-v2 agent. Its purpose i
 
 ## Invariants
 
-- Keep `com.csweet.video-game-engineer` and version `4.5.4` synchronized between agent code,
+- Keep `com.csweet.video-game-engineer` and version `4.5.6` synchronized between agent code,
   `csweet-plugin.json`, tests, and releases.
 - The root manifest is the reviewed authority request. Keep `provides`, `requires`, events,
   configuration, credentials, web access, and UI contributions synchronized with implementation
@@ -35,6 +35,8 @@ This repository contains one standalone C-Sweet protocol-v2 agent. Its purpose i
   rewrite authority to `software-development.implement.v1`.
 
 ## Verification
+
+The execution regressions run Node.js, pnpm 10 and Python 3 against isolated local fixtures. Install those tools on the test runner and expose them on PATH.
 
 Run from the repository root:
 
