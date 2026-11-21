@@ -3,7 +3,7 @@
   <h1>Adrian Silva</h1>
   <p><strong>Video Game Engineer @ C-Sweet · Turning approved requirements into reviewable, tested software</strong></p>
   <p>
-    First-party C-Sweet protocol-v2 agent · <code>com.csweet.video-game-engineer</code> · v4.5.8
+    First-party C-Sweet protocol-v2 agent · <code>com.csweet.video-game-engineer</code> · v4.6.0
   </p>
   <p><strong>Help build this future.</strong> <a href="https://ko-fi.com/O7F226H4A2">Support C-Sweet's development on Ko-fi.</a></p>
   <p>
@@ -53,7 +53,7 @@ block safely. This parser correction does not waive criteria or authorize histor
 First-party C-Sweet engineering agent that implements approved software requirements while keeping
 changes reviewable, tested, and aligned with the product plan.
 
-The package ID is `com.csweet.video-game-engineer`; this implementation is version `4.5.8`
+The package ID is `com.csweet.video-game-engineer`; this implementation is version `4.6.0`
 and uses C-Sweet manifest protocol v2.
 
 ### Experience
@@ -404,6 +404,8 @@ still survive cancellation and restart; the full backlog is saved before impleme
 Repository preparation uses the saved epic title after planning, without a pre-claim reservation.
 
 `HandleDirectWorkMessageAsync` retains new requests as project intake records. Follow-up fixes select an authorized, actual project; personal epics and repository names are not project identities. Once assigned, the platform uses the project's repository binding, so changing an epic title does not create another repository. Existing prepared work retains its original binding during rollout.
+
+After hiring, an Office availability or project assignment event prepares the developer's Linux workspace when Headquarters identifies one authorized project and an approved Office image. Subsequent project work reuses that workspace. With multiple projects, the individual work assignment identifies which workspace to provision.
 
 ## Task delivery and merge choices
 

@@ -20,7 +20,7 @@
   },
   "id": "com.csweet.video-game-engineer",
   "name": "Adrian Silva",
-  "version": "4.5.8",
+  "version": "4.6.0",
   "publisher": {
     "id": "com.csweet",
     "name": "C-Sweet"
@@ -1345,6 +1345,7 @@
       "com.csweet.user.message.received.v1",
       "com.csweet.compute.changed.v1",
       "com.csweet.compute.available.v1",
+      "com.csweet.project-assignment.assigned.v1",
       "com.csweet.source-control.task-review.changed.v1",
       "com.csweet.work.delegation.received.v1",
       "com.csweet.work.tracking.changed.v1",
