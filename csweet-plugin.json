@@ -20,7 +20,7 @@
   },
   "id": "com.csweet.video-game-engineer",
   "name": "Adrian Silva",
-  "version": "4.6.0",
+  "version": "4.6.1",
   "publisher": {
     "id": "com.csweet",
     "name": "C-Sweet"
@@ -1120,6 +1120,12 @@
       "name": "compute.execute.v1",
       "scope": "organization",
       "purpose": "Create and report explicitly requested ephemeral Linux test instances under separate scoped compute and networking grants.",
+      "modelVisible": false
+    },
+    {
+      "name": "compute.start.v1",
+      "scope": "organization",
+      "purpose": "Start an authorized retained workspace when a task needs it.",
       "modelVisible": false
     },
     {
